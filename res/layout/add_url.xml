@@ -72,7 +72,7 @@
         android:paddingLeft="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium"
         android:paddingTop="@dimen/padding_medium"
-        android:text="@string/kbps"
+        android:text="@string/bitrate_kbps"
         android:textAppearance="?android:attr/textAppearanceMedium" />
           
     <LinearLayout

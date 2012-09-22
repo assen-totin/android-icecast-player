@@ -25,6 +25,7 @@
     <string name="server_name">Server Name: </string>
     <string name="listen_url">URL: </string>
     <string name="bitrate">Bitrate: </string>
+    <string name="bitrate_kbps">kbps</string>
     <string name="time">Time: </string>
     <string name="cd_menu">Menu</string>
     <string name="cd_play">Play</string>
@@ -32,6 +33,6 @@
     <string name="cd_favourite_add">Add to favourites</string>
     <string name="cd_favourite_del">Delete from favourites</string>
     <string name="cd_go_home">Return to menu</string>
-    <string name="kbps">kbps</string>
+    
     
 </resources>
