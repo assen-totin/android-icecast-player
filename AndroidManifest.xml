@@ -1,0 +1,56 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.voody.icecast.player"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="15" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivityCircle"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity 
+            android:name="com.voody.icecast.player.DownloadFile"
+            android:label="@string/title_activity_download"
+            android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation">            
+        </activity>  
+        <activity 
+            android:name="com.voody.icecast.player.ProcessFile"
+            android:label="@string/title_activity_process"
+            android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation">
+        </activity>
+        <activity 
+            android:name="com.voody.icecast.player.GenreListActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_activity_genres">
+        </activity>
+        <activity 
+            android:name="com.voody.icecast.player.StationListActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_activity_stations">
+        </activity>
+        <activity 
+            android:name="com.voody.icecast.player.StationListenActivityImg"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_activity_listen">
+        </activity>
+        
+    </application>
+
+</manifest>

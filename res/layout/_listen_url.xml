@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/textView_server_name_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/server_name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/textView_server_name_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/textView_server_name_1"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/empty"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView_bitrate_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_server_name_2"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/bitrate"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+    <TextView
+        android:id="@+id/textView_bitrate_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_server_name_2"
+        android:layout_toRightOf="@+id/textView_bitrate_1"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/empty"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/textView_listen_url_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_bitrate_2"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/listen_url" />
+    
+    <TextView
+        android:id="@+id/textView_listen_url_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_bitrate_2"
+        android:layout_toRightOf="@+id/textView_listen_url_1"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/empty" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_listen_url_2"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/padding_large" >
+    
+    <LinearLayout
+        android:id="@+id/linear_layout_l"
+        android:layout_width="150dip"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">    
+    
+    <Button
+        android:id="@+id/play"
+        android:layout_width="0.0dip"
+        android:layout_height="fill_parent"
+        android:text="@string/play"
+        android:textColor="#000000" 
+        android:layout_weight="1.0"/>
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="0.0dip"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="@string/stop"
+        android:textColor="#000000" 
+        android:layout_weight="1.0"/>
+    </LinearLayout>
+
+    <LinearLayout 
+        android:id="@+id/linear_layout_m"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:layout_weight="1" />
+        
+    <LinearLayout
+        android:id="@+id/linear_layout_r"
+        android:layout_width="150dip"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    <Button
+        android:id="@+id/favourite"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:text="@string/favourite_add"
+        android:layout_weight="1.0"
+        android:textColor="#000000" />
+    <Button
+        android:id="@+id/go_home"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:text="@string/go_home"
+        android:layout_weight="1.0"
+        android:textColor="#000000" />
+    </LinearLayout>
+    </LinearLayout>
+    
+</RelativeLayout>

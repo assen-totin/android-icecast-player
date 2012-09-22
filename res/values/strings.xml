@@ -1,0 +1,36 @@
+<resources>
+
+    <string name="app_name">Icecast Player</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">Icecast Player</string>
+    <string name="title_activity_download">Icecast Player - Downloading stations</string>
+    <string name="title_activity_process">Icecast Player - Processing stations</string>
+    <string name="title_activity_genres">Icecast Player - Genres</string>
+    <string name="title_activity_stations">Icecast Player - Stations</string>
+    <string name="title_activity_listen">Icecast Player - Listen</string>
+    <string name="init">INIT!</string>
+    <string name="genres">LIST GENRES</string>
+    <string name="recent">LIST RECENT</string>
+    <string name="favourites">LIST FAVOURITES</string>
+    <string name="no_results">No results found :-(</string>
+    <string name="no_internet">No Internet connection, shuting down.</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Enter keyword</string>
+    <string name="play">PLAY\n></string>
+    <string name="stop">PAUSE\n||</string>
+    <string name="favourite_add">Add\nFav</string>
+    <string name="favourite_del">Del\nFav</string>
+    <string name="go_home">Go\nHome</string>
+    <string name="empty"></string>
+    <string name="server_name">Server Name: </string>
+    <string name="listen_url">URL: </string>
+    <string name="bitrate">Bitrate: </string>
+    <string name="time">Time: </string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_play">Play</string>
+    <string name="cd_stop">Pause</string>
+    <string name="cd_favourite_add">Add to favourites</string>
+    <string name="cd_favourite_del">Delete from favourites</string>
+    <string name="cd_go_home">Return to menu</string>
+    
+</resources>
