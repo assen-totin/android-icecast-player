@@ -1,17 +1,14 @@
 package com.voody.icecast.player;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ManuallyAddStation extends Activity {
 	ImageView buttonFavourite, buttonHome;
@@ -51,9 +48,9 @@ public class ManuallyAddStation extends Activity {
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		Toast toast;
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			server_name = textViewServerName.getText();
-	   			listen_url = textViewListenUrl.getText();
-	   			bitrate = textViewBitrate.getText();
+	   			server_name = textViewServerName.getText().toString();
+	   			listen_url = textViewListenUrl.getText().toString();
+	   			bitrate = textViewBitrate.getText().toString();
 	   				   			
 	   	        if (dbHelper.isFavourite(listen_url)) {
 	   	        	is_favourite = true;
@@ -75,7 +72,7 @@ public class ManuallyAddStation extends Activity {
 	Button.OnTouchListener buttonHomeTouchListener = new Button.OnTouchListener(){
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			Intent intent = new Intent(StationListenActivityImg.this, MainActivityCircle.class);
+	   			Intent intent = new Intent(ManuallyAddStation.this, MainActivityCircle.class);
 	   			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	   			startActivity(intent);
 	   		}
