@@ -44,19 +44,32 @@ public class DownloadFile extends Activity {
        
         @Override
         protected String doInBackground(String... aurl) {
-            try {
-                //connecting to url
+        	try {
+            	// Call a HEAD method to obtain raw size -
+            	// needed for progress bar when the download is zipped
+            	URL url_size = new URL(fileURL);
+            	HttpURLConnection con_size = (HttpURLConnection) url_size.openConnection();
+            	con_size.setRequestMethod("HEAD");
+            	// Disable compression as we want raw size
+            	con_size.setRequestProperty("Accept-Encoding", "identity");
+            	con_size.setDoOutput(true);
+            	con_size.connect();
+            	int lenghtOfFile = con_size.getContentLength();
+            	
+                // Actual download
                 URL url = new URL(fileURL);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
-                // Disable GZIP on Android 3.0 and higher, or the progress bar will be broken
-                con.setRequestProperty("Accept-Encoding", "identity");
                 con.setDoOutput(true);
                 con.connect();
                
                 //lenghtOfFile is used for calculating download progress
-                int lenghtOfFile = con.getContentLength();
-                                              
+                int lenghtOfFileDnld = con.getContentLength();
+                if (lenghtOfFileDnld == -1) {
+                	// We have zipped download, which does not report Content-Length
+                	lenghtOfFileDnld = lenghtOfFile / 10;
+                }
+                
                 FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
 
                 //file input is from the url
@@ -69,7 +82,11 @@ public class DownloadFile extends Activity {
                
                 while ((len1 = is.read(buffer)) > 0) {
                     total += len1; 
-                    publishProgress("" + (int)((total*100)/lenghtOfFile));
+                    int progress_val = (int)((total*100)/lenghtOfFileDnld);
+                    if (progress_val > 99) {
+                    	progress_val = 100;
+                    }
+                    publishProgress("" + progress_val);
                     fos.write(buffer, 0, len1);
                 }
                 fos.close();
