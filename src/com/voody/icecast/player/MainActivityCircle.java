@@ -40,7 +40,10 @@ public class MainActivityCircle extends Activity {
         
         menuCircle = (ImageView)findViewById(R.id.menu_circle);
         menuCircle.setOnTouchListener(menuCircleTouchListener);
-               
+        
+        buttonSearch = (Button)findViewById(R.id.manually_add);
+        buttonSearch.setOnClickListener(buttonManuallyClickListener);
+        
         SQLiteHelper dbHelper = new SQLiteHelper(MainActivityCircle.this);
         long last_update = dbHelper.getUpdates();
         long unix_timestamp = System.currentTimeMillis()/1000;
@@ -114,6 +117,13 @@ public class MainActivityCircle extends Activity {
        		sendBundle.putString("query", query);
 	        Intent intent = new Intent(view.getContext(), StationListActivity.class);
 	        intent.putExtras(sendBundle);
+	        startActivity(intent);
+       	}
+    };
+    
+    Button.OnClickListener buttonManuallyClickListener = new Button.OnClickListener(){
+       	public void onClick(View view)  {
+       		Intent intent = new Intent(view.getContext(), ManuallyAddStation.class);
 	        startActivity(intent);
        	}
     };

@@ -33,6 +33,8 @@
     <string name="cd_favourite_add">Add to favourites</string>
     <string name="cd_favourite_del">Delete from favourites</string>
     <string name="cd_go_home">Return to menu</string>
-    
+    <string name="manually_add">Manually Add Station</string>
+    <string name="manually_added">Added the station to Favourites.</string>
+    <string name="manually_exists">Station already exists in Favourites.</string>
     
 </resources>

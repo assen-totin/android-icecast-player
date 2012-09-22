@@ -37,7 +37,29 @@
         android:layout_below="@+id/linear_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/padding_large"
+        android:layout_marginBottom="@dimen/padding_large"
         android:contentDescription="@string/cd_menu"
         android:src="@drawable/menu" />
 
+    <LinearLayout
+        android:id="@+id/linear_layout_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/menu_circle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_large"
+        android:orientation="horizontal" >
+    
+    <Button
+        android:id="@+id/manually_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:text="@string/manually_add"
+        android:ems="16"
+        android:textColor="#000000" />
+
+    </LinearLayout>
+    
 </RelativeLayout>
