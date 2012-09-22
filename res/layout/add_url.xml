@@ -13,113 +13,113 @@
         android:text="@string/server_name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
-    <TextView
-        android:id="@+id/textView_server_name_2"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editText_server_name_2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/textView_server_name_1"
-        android:paddingTop="@dimen/padding_medium"
-        android:text="@string/empty"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:paddingTop="@dimen/padding_medium">
+        <requestFocus />
+    </EditText>
 
+    <TextView
+        android:id="@+id/textView_listen_url_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText_server_name_2"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/listen_url" 
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <EditText
+        android:id="@+id/editText_listen_url_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/textView_listen_url_1"
+        android:layout_below="@+id/editText_server_name_2"
+        android:paddingTop="@dimen/padding_medium">
+    </EditText>
+    
     <TextView
         android:id="@+id/textView_bitrate_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_server_name_2"
+        android:layout_below="@+id/editText_listen_url_2"
         android:paddingLeft="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium"
         android:paddingTop="@dimen/padding_medium"
         android:text="@string/bitrate"
         android:textAppearance="?android:attr/textAppearanceMedium" />
         
-    <TextView
-        android:id="@+id/textView_bitrate_2"
+    <EditText
+        android:id="@+id/editText_bitrate_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_server_name_2"
         android:layout_toRightOf="@+id/textView_bitrate_1"
+        android:layout_below="@+id/editText_listen_url_2"
         android:paddingTop="@dimen/padding_medium"
-        android:text="@string/empty"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:ems="3" >
+    </EditText>
     
     <TextView
-        android:id="@+id/textView_listen_url_1"
+        android:id="@+id/textView_bitrate_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_bitrate_2"
+        android:layout_below="@+id/editText_listen_url_2"
+        android:layout_toRightOf="@+id/editText_bitrate_2"
         android:paddingLeft="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium"
         android:paddingTop="@dimen/padding_medium"
-        android:text="@string/listen_url" />
-    
-    <TextView
-        android:id="@+id/textView_listen_url_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_bitrate_2"
-        android:layout_toRightOf="@+id/textView_listen_url_1"
-        android:paddingTop="@dimen/padding_medium"
-        android:text="@string/empty" />
-
+        android:text="@string/kbps"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+          
     <LinearLayout
         android:id="@+id/linear_layout_1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_listen_url_2"
+        android:layout_below="@+id/editText_bitrate_2"
         android:orientation="horizontal"
+        android:baselineAligned="false"
         android:paddingTop="@dimen/padding_large" >
     
     <LinearLayout
         android:id="@+id/linear_layout_l"
-        android:layout_width="150dip"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">    
-    
-    <Button
-        android:id="@+id/play"
-        android:layout_width="0.0dip"
-        android:layout_height="fill_parent"
-        android:text="@string/play"
-        android:textColor="#000000" 
-        android:layout_weight="1.0"/>
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/stop"
-        android:layout_width="0.0dip"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:text="@string/stop"
-        android:textColor="#000000" 
-        android:layout_weight="1.0"/>
     </LinearLayout>
 
     <LinearLayout 
         android:id="@+id/linear_layout_m"
-        android:layout_width="fill_parent"
+        android:layout_width="0dip"
         android:layout_height="wrap_content" 
         android:layout_weight="1" />
         
     <LinearLayout
         android:id="@+id/linear_layout_r"
-        android:layout_width="150dip"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
     
-    <Button
+    <ImageView
         android:id="@+id/favourite"
-        android:layout_width="0.0dip"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/favourite_add"
-        android:layout_weight="1.0"
-        android:textColor="#000000" />
-    <Button
+        android:padding="@dimen/padding_small"
+        android:contentDescription="@string/cd_favourite_add"
+        android:src="@drawable/b3_add" />
+
+    <ImageView
         android:id="@+id/go_home"
-        android:layout_width="0.0dip"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/go_home"
-        android:layout_weight="1.0"
-        android:textColor="#000000" />
+        android:padding="@dimen/padding_small"
+        android:contentDescription="@string/cd_go_home"
+        android:src="@drawable/b4" />
+
     </LinearLayout>
     </LinearLayout>
     
