@@ -52,9 +52,11 @@ public class DownloadFile extends Activity {
             	con_size.setRequestMethod("HEAD");
             	// Disable compression as we want raw size
             	con_size.setRequestProperty("Accept-Encoding", "identity");
-            	con_size.setDoOutput(true);
+            	//con_size.setDoOutput(true);
             	con_size.connect();
-            	int lenghtOfFile = con_size.getContentLength();
+            	int lengthOfFile = con_size.getContentLength();
+            	
+            	System.err.print("LENGTH_OF_FILE: " + lengthOfFile);
             	
                 // Actual download
                 URL url = new URL(fileURL);
@@ -67,7 +69,7 @@ public class DownloadFile extends Activity {
                 int lenghtOfFileDnld = con.getContentLength();
                 if (lenghtOfFileDnld == -1) {
                 	// We have zipped download, which does not report Content-Length
-                	lenghtOfFileDnld = lenghtOfFile / 10;
+                	lenghtOfFileDnld = (int) lengthOfFile / 10;
                 }
                 
                 FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);

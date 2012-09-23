@@ -50,6 +50,11 @@
             android:theme="@style/AppTheme"
             android:label="@string/title_activity_listen">
         </activity>
+        <activity 
+            android:name="com.voody.icecast.player.ManuallyAddStation"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_manually_add">
+        </activity>
         
     </application>
 

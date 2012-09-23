@@ -28,11 +28,11 @@ public class ManuallyAddStation extends Activity {
         buttonHome = (ImageView)findViewById(R.id.go_home);
         buttonHome.setOnTouchListener(buttonHomeTouchListener);
         
-        textViewServerName = (TextView) findViewById(R.id.textView_server_name_2);
+        textViewServerName = (TextView) findViewById(R.id.editText_server_name_2);
                 
-        textViewListenUrl = (TextView) findViewById(R.id.textView_listen_url_2);
+        textViewListenUrl = (TextView) findViewById(R.id.editText_listen_url_2);
                 
-        textViewBitrate = (TextView) findViewById(R.id.textView_bitrate_2);
+        textViewBitrate = (TextView) findViewById(R.id.editText_bitrate_2);
 	}
 	
 	public void onDestroy() {

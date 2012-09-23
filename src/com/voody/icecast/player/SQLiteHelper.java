@@ -222,7 +222,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			listen_url +
 			"','" +
 			bitrate +
-			"','manually_added'";
+			"','manually_added')";
 		database.execSQL(query);
 	}
 	
