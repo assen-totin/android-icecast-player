@@ -56,8 +56,6 @@ public class DownloadFile extends Activity {
             	con_size.connect();
             	int lengthOfFile = con_size.getContentLength();
             	
-            	System.err.print("LENGTH_OF_FILE: " + lengthOfFile);
-            	
                 // Actual download
                 URL url = new URL(fileURL);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -66,10 +64,10 @@ public class DownloadFile extends Activity {
                 con.connect();
                
                 //lenghtOfFile is used for calculating download progress
-                int lenghtOfFileDnld = con.getContentLength();
-                if (lenghtOfFileDnld == -1) {
+                int lengthOfFileDnld = con.getContentLength();                              
+                if (lengthOfFileDnld == -1) {
                 	// We have zipped download, which does not report Content-Length
-                	lenghtOfFileDnld = (int) lengthOfFile / 10;
+                	lengthOfFileDnld = lengthOfFile;
                 }
                 
                 FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -78,13 +76,13 @@ public class DownloadFile extends Activity {
                 InputStream is = con.getInputStream();
 
                 //here's the download code
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[10240];
                 int len1 = 0;
                 long total = 0;
                
                 while ((len1 = is.read(buffer)) > 0) {
                     total += len1; 
-                    int progress_val = (int)((total*100)/lenghtOfFileDnld);
+                    int progress_val = (int)((total*100)/lengthOfFileDnld);
                     if (progress_val > 99) {
                     	progress_val = 100;
                     }

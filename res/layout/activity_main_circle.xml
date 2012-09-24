@@ -36,8 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/linear_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/padding_large"
-        android:layout_marginBottom="@dimen/padding_large"
         android:contentDescription="@string/cd_menu"
         android:src="@drawable/menu" />
 
@@ -47,7 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/menu_circle"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/padding_large"
         android:layout_marginTop="@dimen/padding_large"
         android:orientation="horizontal" >
     

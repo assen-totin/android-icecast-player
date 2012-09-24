@@ -39,7 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/textView_listen_url_1"
         android:layout_below="@+id/editText_server_name_2"
-        android:paddingTop="@dimen/padding_medium">
+        android:paddingTop="@dimen/padding_medium"
+        android:hint="@string/url_hint">
     </EditText>
     
     <TextView

@@ -17,11 +17,6 @@
     <string name="no_internet">No Internet connection, shuting down.</string>
     <string name="search">Search</string>
     <string name="search_hint">Enter keyword</string>
-    <string name="play">PLAY\n></string>
-    <string name="stop">PAUSE\n||</string>
-    <string name="favourite_add">Add\nFav</string>
-    <string name="favourite_del">Del\nFav</string>
-    <string name="go_home">Go\nHome</string>
     <string name="empty"></string>
     <string name="server_name">Server Name: </string>
     <string name="listen_url">URL: </string>
@@ -37,5 +32,6 @@
     <string name="manually_add">Manually Add Station</string>
     <string name="manually_added">Added the station to Favourites.</string>
     <string name="manually_exists">Station already exists in Favourites.</string>
+    <string name="url_hint">http://&#8230;</string>
     
 </resources>
