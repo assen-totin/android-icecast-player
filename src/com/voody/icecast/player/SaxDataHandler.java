@@ -92,8 +92,8 @@ public class SaxDataHandler extends DefaultHandler {
     // and populating it in the Config object. 
 	@Override 
 	public void characters(char ch[], int start, int length) { 
-		String chars = new String(ch, start, length); 
-		chars = chars.trim();
+		//String chars = new String(ch, start, length); 
+		//chars = chars.trim();
 		
 		if (_inSection && _elementOn) {
 			for (int i=start; i<start+length; i++) {

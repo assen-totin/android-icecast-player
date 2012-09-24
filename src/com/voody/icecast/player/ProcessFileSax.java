@@ -84,20 +84,12 @@ public class ProcessFileSax extends Activity {
             	String bitrate = dataHandler.getData().getBitrate().get(i);
             	String genre = dataHandler.getData().getGenre().get(i);
 
-            	listen_url.replace("'","&apos");
-            	listen_url.replace("&#039;","&apos");
-            	server_name.replace("'","&apos");
-            	server_name.replace("&#039;","&apos");
-
-Log.e("DEEBA", genre);            	
+            	listen_url = listen_url.replace("\'","&apos");
+            	server_name = server_name.replace("\'","&apos");
+          	
             	String[] genre_single = genre.split(" ");
-            	for (int j=0; j<genre_single.length; j++) {
-Log.e("DEEBA", genre_single[j]);            		
-            		//genre_single[j].replace("'","&apos");
-            		//genre_single[j].replace("&#039;","&apos");
-            		genre_single[j].replace("'","");
-            		genre_single[j].replace("&#039;","");
-Log.e("DEEBA2", genre_single[j]);
+            	for (int j=0; j<genre_single.length; j++) {       		
+					genre_single[j] = genre_single[j].replace("\'","");
             		dbHelper.insertIntoStations(server_name, listen_url, bitrate, genre_single[j]);
             	}
             	
