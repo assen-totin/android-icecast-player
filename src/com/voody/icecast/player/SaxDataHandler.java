@@ -5,7 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import android.util.Log;
 
-public class SaxDataHandler extends DefaultHandler { 
+public class SaxDataHandler extends DefaultHandler {
 	// booleans that check whether it's in a specific tag or not 
 	private boolean _inSection, _elementOn; 
  
@@ -15,6 +15,9 @@ public class SaxDataHandler extends DefaultHandler {
 	// This holds the value of each element
 	private String _elementValue;
  
+	// String Builder
+	StringBuilder sb;
+	
 	// Returns the data object  
 	public SaxData getData() { 
 		return _data; 
@@ -52,6 +55,8 @@ public class SaxDataHandler extends DefaultHandler {
 		}
 		else {
 			_elementOn = true;
+			sb = new StringBuilder();
+
 		}
 	} 
  
@@ -91,7 +96,11 @@ public class SaxDataHandler extends DefaultHandler {
 		chars = chars.trim();
 		
 		if (_inSection && _elementOn) {
-			_elementValue = chars; 
-		} 
+			for (int i=start; i<start+length; i++) {
+				sb.append(ch[i]);
+				//_elementValue = chars;
+			}
+			_elementValue = sb.toString().trim();
+		}
 	} 
-} 
+}
