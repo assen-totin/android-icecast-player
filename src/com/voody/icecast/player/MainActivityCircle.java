@@ -21,8 +21,8 @@ public class MainActivityCircle extends Activity {
     int menu_circle_size, menu_circle_number = 0, displaySmaller;
     int[] widget_coord = new int[2];
     Intent intent;
-    //final static long UPDATE_THRESHOLD = 604800; // Seconds: one week
-    final static long UPDATE_THRESHOLD = 300; 
+    final static long UPDATE_THRESHOLD = 604800; // Seconds: one week
+    //final static long UPDATE_THRESHOLD = 300; 
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
