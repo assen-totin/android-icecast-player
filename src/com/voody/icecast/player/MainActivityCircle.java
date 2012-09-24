@@ -22,7 +22,7 @@ public class MainActivityCircle extends Activity {
     int[] widget_coord = new int[2];
     Intent intent;
     final static long UPDATE_THRESHOLD = 604800; // Seconds: one week
-    //final static long UPDATE_THRESHOLD = 300; 
+    //final static long UPDATE_THRESHOLD = 360; 
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
