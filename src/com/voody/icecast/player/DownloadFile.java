@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.zip.GZIPInputStream;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -24,9 +25,14 @@ public class DownloadFile extends Activity {
     public String fileName = "yp.xml";
     public String fileURL = "http://dir.xiph.org/yp.xml";
    
+    private int _api_level = 0;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        _api_level = Integer.valueOf(android.os.Build.VERSION.SDK_INT);
+        
         //setting some display
         setContentView(R.layout.download_file);
          
@@ -59,23 +65,34 @@ public class DownloadFile extends Activity {
                 // Actual download
                 URL url = new URL(fileURL);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                
+                if (_api_level < 12) {
+                	// Before Android 3, force zipped download
+                	con.setRequestProperty("Accept-Encoding", "gzip");
+                }
+                
                 con.setRequestMethod("GET");
                 con.setDoOutput(true);
                 con.connect();
                
                 //lenghtOfFile is used for calculating download progress
-                int lengthOfFileDnld = con.getContentLength();                              
-                if (lengthOfFileDnld == -1) {
+                int lengthOfFileDnld = 1;
+                int lengthFromHttp = con.getContentLength();                              
+                if (lengthFromHttp == -1) {
                 	// We have zipped download, which does not report Content-Length
                 	lengthOfFileDnld = lengthOfFile;
                 }
                 
                 FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
-                
 
-                //file input is from the url
+                // file input is from the url
                 InputStream is = con.getInputStream();
-
+                
+                // Before Android 3, force unzipping for zipped download
+                if ((_api_level < 12) & (lengthFromHttp == -1)) {
+                	is = new GZIPInputStream(is);
+                }
+                
                 //here's the download code
                 byte[] buffer = new byte[10240];
                 int len1 = 0;

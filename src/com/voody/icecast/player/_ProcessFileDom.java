@@ -12,7 +12,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-public class ProcessFile extends Activity { 
+public class _ProcessFileDom extends Activity { 
     //initialize our progress dialog/bar
     private ProgressDialog mProgressDialog;
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
@@ -41,7 +41,7 @@ public class ProcessFile extends Activity {
         @Override
         protected String doInBackground(String... aurl) {
             // Init DB
-            SQLiteHelper dbHelper = new SQLiteHelper(ProcessFile.this);
+            SQLiteHelper dbHelper = new SQLiteHelper(_ProcessFileDom.this);
             dbHelper.deleteFromStations();
             dbHelper.insertIntoUpdates();
             
@@ -53,7 +53,7 @@ public class ProcessFile extends Activity {
 
 			Document dom = null;
 			try {
-				dom = parser.getDomElement(ProcessFile.this, fileName);
+				dom = parser.getDomElement(_ProcessFileDom.this, fileName);
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			}

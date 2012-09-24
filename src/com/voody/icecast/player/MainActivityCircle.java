@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -21,13 +22,16 @@ public class MainActivityCircle extends Activity {
     int menu_circle_size, menu_circle_number = 0, displaySmaller;
     int[] widget_coord = new int[2];
     Intent intent;
-    final static long UPDATE_THRESHOLD = 604800; // Seconds: one week
-    //final static long UPDATE_THRESHOLD = 360; 
+    private Boolean _circleTouched = false; 
+    //final static long UPDATE_THRESHOLD = 604800; // Seconds: one week
+    final static long UPDATE_THRESHOLD = 3600; 
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_circle);
+        
+        _circleTouched = false;
         
         if (!isOnline()) {
         	Toast toast = Toast.makeText(MainActivityCircle.this, getString(R.string.no_internet), Toast.LENGTH_SHORT);
@@ -66,7 +70,10 @@ public class MainActivityCircle extends Activity {
     
     OnTouchListener menuCircleTouchListener = new OnTouchListener(){
         public boolean onTouch(View v, MotionEvent event){
-        	if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        	if ((event.getAction() == MotionEvent.ACTION_DOWN) && !_circleTouched){
+        	//if (event.getAction() == MotionEvent.ACTION_DOWN){	
+        		_circleTouched = true;
+        		
         		// Calc width here, because widget's width is not available in onCreate()
         		menu_circle_size = menuCircle.getWidth();       		
         		menu_circle_number = 0;
@@ -87,19 +94,24 @@ public class MainActivityCircle extends Activity {
         			menu_circle_number = MenuCircle.getCircle(relX, relY, menu_circle_size);
         		}
            
+        		Log.e("MAIN_ACT", "" + menu_circle_number);
+        		
         		switch(menu_circle_number) {
             		case 1:
             			sendBundle.putString("mode", "favourites");
             			intent = new Intent(MainActivityCircle.this, StationListActivity.class);
             			intent.putExtras(sendBundle);
+            			_circleTouched = false;
             			startActivity(intent);
             		case 2:
             			sendBundle.putString("mode", "recent");
             			intent = new Intent(MainActivityCircle.this, StationListActivity.class);
             			intent.putExtras(sendBundle);
+            			_circleTouched = false;
             			startActivity(intent);
             		case 3:
             			intent = new Intent(MainActivityCircle.this, GenreListActivity.class);
+            			_circleTouched = false;
             			startActivity(intent);
             		default:
             			return true;
