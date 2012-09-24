@@ -71,6 +71,7 @@ public class DownloadFile extends Activity {
                 }
                 
                 FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+                
 
                 //file input is from the url
                 InputStream is = con.getInputStream();
@@ -107,7 +108,7 @@ public class DownloadFile extends Activity {
             //dismiss the dialog after the file was downloaded
         	dismissDialog(DIALOG_DOWNLOAD_PROGRESS);
 	     
-	        Intent intent = new Intent(DownloadFile.this, ProcessFile.class);
+	        Intent intent = new Intent(DownloadFile.this, ProcessFileSax.class);
 	        startActivity(intent);
         	
             finish();

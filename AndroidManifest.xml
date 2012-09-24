@@ -30,7 +30,7 @@
             android:configChanges="keyboardHidden|orientation">            
         </activity>  
         <activity 
-            android:name="com.voody.icecast.player.ProcessFile"
+            android:name="com.voody.icecast.player.ProcessFileSax"
             android:label="@string/title_activity_process"
             android:theme="@style/AppTheme"
             android:configChanges="keyboardHidden|orientation">

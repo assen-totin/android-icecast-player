@@ -14,6 +14,7 @@ import org.xml.sax.XMLReader;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,7 +64,8 @@ public class ProcessFileSax extends Activity {
             	XMLReader xr = sp.getXMLReader();
             	dataHandler = new SaxDataHandler();
             	xr.setContentHandler(dataHandler);
-            	xr.parse(new InputSource(new FileInputStream(fileName)));
+            	FileInputStream fis = openFileInput(fileName);
+            	xr.parse(new InputSource(fis));
             }
             catch(ParserConfigurationException pce) { 
             	Log.e("SAX XML", "sax parse error", pce); 
@@ -75,8 +77,7 @@ public class ProcessFileSax extends Activity {
             
 			publishProgress("" + 10);
 			
-            // Process the DOM into SQL table
-            
+            // Process the SAX into SQL table
             for (int i = 0; i < dataHandler.getData().getServerName().size(); i++) {
             	String server_name = dataHandler.getData().getServerName().get(i);
             	String listen_url = dataHandler.getData().getListenUrl().get(i);
@@ -84,11 +85,19 @@ public class ProcessFileSax extends Activity {
             	String genre = dataHandler.getData().getGenre().get(i);
 
             	listen_url.replace("'","&apos");
+            	listen_url.replace("&#039;","&apos");
             	server_name.replace("'","&apos");
-            	
+            	server_name.replace("&#039;","&apos");
+
+Log.e("DEEBA", genre);            	
             	String[] genre_single = genre.split(" ");
             	for (int j=0; j<genre_single.length; j++) {
-            		genre_single[j].replace("'","&apos");
+Log.e("DEEBA", genre_single[j]);            		
+            		//genre_single[j].replace("'","&apos");
+            		//genre_single[j].replace("&#039;","&apos");
+            		genre_single[j].replace("'","");
+            		genre_single[j].replace("&#039;","");
+Log.e("DEEBA2", genre_single[j]);
             		dbHelper.insertIntoStations(server_name, listen_url, bitrate, genre_single[j]);
             	}
             	
