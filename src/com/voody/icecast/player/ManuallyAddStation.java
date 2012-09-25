@@ -13,7 +13,7 @@ import android.widget.Toast;
 public class ManuallyAddStation extends Activity {
 	ImageView buttonFavourite, buttonHome;
 	TextView textViewServerName, textViewListenUrl, textViewBitrate;
-	String server_name, listen_url, bitrate;
+	String server_name, listen_url;
 	Boolean is_favourite = false;
 		
 	SQLiteHelper dbHelper = new SQLiteHelper(ManuallyAddStation.this);
@@ -31,8 +31,6 @@ public class ManuallyAddStation extends Activity {
         textViewServerName = (TextView) findViewById(R.id.editText_server_name_2);
                 
         textViewListenUrl = (TextView) findViewById(R.id.editText_listen_url_2);
-                
-        textViewBitrate = (TextView) findViewById(R.id.editText_bitrate_2);
 	}
 	
 	public void onDestroy() {
@@ -50,7 +48,6 @@ public class ManuallyAddStation extends Activity {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
 	   			server_name = textViewServerName.getText().toString();
 	   			listen_url = textViewListenUrl.getText().toString();
-	   			bitrate = textViewBitrate.getText().toString();
 	   				   			
 	   	        if (dbHelper.isFavourite(listen_url)) {
 	   	        	is_favourite = true;
@@ -60,7 +57,7 @@ public class ManuallyAddStation extends Activity {
 	   				toast = Toast.makeText(ManuallyAddStation.this, getString(R.string.manually_exists), Toast.LENGTH_SHORT);
 	   			}
 	   			else {
-	   				dbHelper.insertManuallyStation(server_name, listen_url, bitrate);
+	   				dbHelper.insertManuallyStation(server_name, listen_url);
 	   	        	toast = Toast.makeText(ManuallyAddStation.this, getString(R.string.manually_added), Toast.LENGTH_SHORT);
 	   			}
    	        	toast.show();

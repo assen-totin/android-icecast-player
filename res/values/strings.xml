@@ -9,10 +9,6 @@
     <string name="title_activity_stations">Icecast Player - Stations</string>
     <string name="title_activity_listen">Icecast Player - Listen</string>
     <string name="title_manually_add">Icecast Player - Manually Add Station</string>
-    <string name="init">INIT!</string>
-    <string name="genres">LIST GENRES</string>
-    <string name="recent">LIST RECENT</string>
-    <string name="favourites">LIST FAVOURITES</string>
     <string name="no_results">No results found :-(</string>
     <string name="no_internet">No Internet connection, shuting down.</string>
     <string name="search">Search</string>

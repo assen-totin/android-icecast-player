@@ -214,15 +214,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return results;
 	}
 	
-	public void insertManuallyStation(String server_name, String listen_url, String bitrate) {
+	public void insertManuallyStation(String server_name, String listen_url) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		String query = "INSERT INTO favourites (server_name, listen_url, bitrate, genre) VALUES ('" +
 			server_name +
 			"','" +
 			listen_url +
-			"','" +
-			bitrate +
-			"','manually_added')";
+			"','0','manually_added')";
 		database.execSQL(query);
 	}
 	

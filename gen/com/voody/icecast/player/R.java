@@ -30,33 +30,31 @@ public final class R {
         public static final int menu=0x7f020008;
     }
     public static final class id {
-        public static final int editText_bitrate_2=0x7f09000b;
         public static final int editText_listen_url_2=0x7f090009;
         public static final int editText_server_name_2=0x7f090007;
-        public static final int favourite=0x7f090011;
-        public static final int go_home=0x7f090012;
+        public static final int favourite=0x7f09000e;
+        public static final int go_home=0x7f09000f;
         public static final int linear_layout=0x7f090000;
-        public static final int linear_layout_1=0x7f09000d;
+        public static final int linear_layout_1=0x7f09000a;
         public static final int linear_layout_2=0x7f090004;
-        public static final int linear_layout_l=0x7f09000e;
-        public static final int linear_layout_m=0x7f09000f;
-        public static final int linear_layout_r=0x7f090010;
+        public static final int linear_layout_l=0x7f09000b;
+        public static final int linear_layout_m=0x7f09000c;
+        public static final int linear_layout_r=0x7f09000d;
         public static final int manually_add=0x7f090005;
         public static final int menu_circle=0x7f090003;
-        public static final int menu_settings=0x7f09001a;
-        public static final int play=0x7f090018;
+        public static final int menu_settings=0x7f090018;
+        public static final int play=0x7f090016;
         public static final int search_button=0x7f090002;
         public static final int search_form=0x7f090001;
-        public static final int stop=0x7f090019;
-        public static final int textView_bitrate_1=0x7f09000a;
-        public static final int textView_bitrate_2=0x7f090014;
-        public static final int textView_bitrate_3=0x7f09000c;
+        public static final int stop=0x7f090017;
+        public static final int textView_bitrate_1=0x7f090011;
+        public static final int textView_bitrate_2=0x7f090012;
         public static final int textView_listen_url_1=0x7f090008;
-        public static final int textView_listen_url_2=0x7f090017;
+        public static final int textView_listen_url_2=0x7f090015;
         public static final int textView_server_name_1=0x7f090006;
-        public static final int textView_server_name_2=0x7f090013;
-        public static final int textView_timer_1=0x7f090015;
-        public static final int textView_timer_2=0x7f090016;
+        public static final int textView_server_name_2=0x7f090010;
+        public static final int textView_timer_1=0x7f090013;
+        public static final int textView_timer_2=0x7f090014;
     }
     public static final class layout {
         public static final int activity_main_circle=0x7f030000;
@@ -70,30 +68,26 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050000;
-        public static final int bitrate=0x7f050014;
-        public static final int bitrate_kbps=0x7f050015;
-        public static final int cd_favourite_add=0x7f05001a;
-        public static final int cd_favourite_del=0x7f05001b;
-        public static final int cd_go_home=0x7f05001c;
-        public static final int cd_menu=0x7f050017;
-        public static final int cd_play=0x7f050018;
-        public static final int cd_stop=0x7f050019;
-        public static final int empty=0x7f050011;
-        public static final int favourites=0x7f05000c;
-        public static final int genres=0x7f05000a;
-        public static final int init=0x7f050009;
-        public static final int listen_url=0x7f050013;
-        public static final int manually_add=0x7f05001d;
-        public static final int manually_added=0x7f05001e;
-        public static final int manually_exists=0x7f05001f;
+        public static final int bitrate=0x7f050010;
+        public static final int bitrate_kbps=0x7f050011;
+        public static final int cd_favourite_add=0x7f050016;
+        public static final int cd_favourite_del=0x7f050017;
+        public static final int cd_go_home=0x7f050018;
+        public static final int cd_menu=0x7f050013;
+        public static final int cd_play=0x7f050014;
+        public static final int cd_stop=0x7f050015;
+        public static final int empty=0x7f05000d;
+        public static final int listen_url=0x7f05000f;
+        public static final int manually_add=0x7f050019;
+        public static final int manually_added=0x7f05001a;
+        public static final int manually_exists=0x7f05001b;
         public static final int menu_settings=0x7f050001;
-        public static final int no_internet=0x7f05000e;
-        public static final int no_results=0x7f05000d;
-        public static final int recent=0x7f05000b;
-        public static final int search=0x7f05000f;
-        public static final int search_hint=0x7f050010;
-        public static final int server_name=0x7f050012;
-        public static final int time=0x7f050016;
+        public static final int no_internet=0x7f05000a;
+        public static final int no_results=0x7f050009;
+        public static final int search=0x7f05000b;
+        public static final int search_hint=0x7f05000c;
+        public static final int server_name=0x7f05000e;
+        public static final int time=0x7f050012;
         public static final int title_activity_download=0x7f050003;
         public static final int title_activity_genres=0x7f050005;
         public static final int title_activity_listen=0x7f050007;
@@ -101,7 +95,7 @@ public final class R {
         public static final int title_activity_process=0x7f050004;
         public static final int title_activity_stations=0x7f050006;
         public static final int title_manually_add=0x7f050008;
-        public static final int url_hint=0x7f050020;
+        public static final int url_hint=0x7f05001c;
     }
     public static final class style {
         public static final int AppTheme=0x7f070000;
