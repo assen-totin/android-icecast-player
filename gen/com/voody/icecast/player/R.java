@@ -30,31 +30,30 @@ public final class R {
         public static final int menu=0x7f020008;
     }
     public static final class id {
-        public static final int editText_listen_url_2=0x7f090009;
-        public static final int editText_server_name_2=0x7f090007;
-        public static final int favourite=0x7f09000e;
-        public static final int go_home=0x7f09000f;
-        public static final int linear_layout=0x7f090000;
-        public static final int linear_layout_1=0x7f09000a;
-        public static final int linear_layout_2=0x7f090004;
-        public static final int linear_layout_l=0x7f09000b;
-        public static final int linear_layout_m=0x7f09000c;
-        public static final int linear_layout_r=0x7f09000d;
-        public static final int manually_add=0x7f090005;
-        public static final int menu_circle=0x7f090003;
-        public static final int menu_settings=0x7f090018;
-        public static final int play=0x7f090016;
-        public static final int search_button=0x7f090002;
-        public static final int search_form=0x7f090001;
-        public static final int stop=0x7f090017;
-        public static final int textView_bitrate_1=0x7f090011;
-        public static final int textView_bitrate_2=0x7f090012;
-        public static final int textView_listen_url_1=0x7f090008;
-        public static final int textView_listen_url_2=0x7f090015;
-        public static final int textView_server_name_1=0x7f090006;
-        public static final int textView_server_name_2=0x7f090010;
-        public static final int textView_timer_1=0x7f090013;
-        public static final int textView_timer_2=0x7f090014;
+        public static final int editText_listen_url_2=0x7f080009;
+        public static final int editText_server_name_2=0x7f080007;
+        public static final int favourite=0x7f08000e;
+        public static final int go_home=0x7f08000f;
+        public static final int linear_layout=0x7f080000;
+        public static final int linear_layout_1=0x7f08000a;
+        public static final int linear_layout_2=0x7f080004;
+        public static final int linear_layout_l=0x7f08000b;
+        public static final int linear_layout_m=0x7f08000c;
+        public static final int linear_layout_r=0x7f08000d;
+        public static final int manually_add=0x7f080005;
+        public static final int menu_circle=0x7f080003;
+        public static final int play=0x7f080016;
+        public static final int search_button=0x7f080002;
+        public static final int search_form=0x7f080001;
+        public static final int stop=0x7f080017;
+        public static final int textView_bitrate_1=0x7f080011;
+        public static final int textView_bitrate_2=0x7f080012;
+        public static final int textView_listen_url_1=0x7f080008;
+        public static final int textView_listen_url_2=0x7f080015;
+        public static final int textView_server_name_1=0x7f080006;
+        public static final int textView_server_name_2=0x7f080010;
+        public static final int textView_timer_1=0x7f080013;
+        public static final int textView_timer_2=0x7f080014;
     }
     public static final class layout {
         public static final int activity_main_circle=0x7f030000;
@@ -62,9 +61,6 @@ public final class R {
         public static final int download_file=0x7f030002;
         public static final int listen_url_img=0x7f030003;
         public static final int process_file=0x7f030004;
-    }
-    public static final class menu {
-        public static final int activity_main=0x7f080000;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
