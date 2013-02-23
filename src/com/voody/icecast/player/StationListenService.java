@@ -1,9 +1,10 @@
 package com.voody.icecast.player;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import android.app.NotificationManager;
+//import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -28,7 +29,7 @@ public class StationListenService extends Service {
     static final int MSG_SET_STRING_VALUE = 4;
     //private NotificationManager nm;
     ArrayList<Messenger> mClients = new ArrayList<Messenger>(); // Keeps track of all current registered clients.
-    final Messenger mMessenger = new Messenger(new IncomingHandler()); // Target we publish for clients to send messages to IncomingHandler.
+    final Messenger mMessenger = new Messenger(new IncomingHandler(this)); // Target we publish for clients to send messages to IncomingHandler.
     
 	public void onCreate() {
 		 mediaPlayer = new MediaPlayer();
@@ -80,21 +81,30 @@ public class StationListenService extends Service {
         return mMessenger.getBinder();
     }
 	
-    class IncomingHandler extends Handler { // Handler of incoming messages from clients.
+    // This is a bit cumbersome, but having the handler 'static' avoids potential
+    // memory leak when a message is put in a queue when the client gone. 
+    static class IncomingHandler extends Handler { // Handler of incoming messages from clients.
+    	private final WeakReference<StationListenService> mService;
+    	
+    	IncomingHandler(StationListenService service) {
+    		mService = new WeakReference<StationListenService>(service);
+    	}
+    	
         @Override
         public void handleMessage(Message msg) {
+        	StationListenService service = mService.get();       	
             switch (msg.what) {
             case MSG_REGISTER_CLIENT:
-                mClients.add(msg.replyTo);
+                service.mClients.add(msg.replyTo);
                 break;
             case MSG_UNREGISTER_CLIENT:
-                mClients.remove(msg.replyTo);
+                service.mClients.remove(msg.replyTo);
                 break;
             case MSG_SET_INT_VALUE:
                 if (msg.arg1 == 1)
-                	mediaPlayer.start();
+                	service.mediaPlayer.start();
                 else if (msg.arg1 == 2)
-                	mediaPlayer.pause();
+                	service.mediaPlayer.pause();
                 break;
             default:
                 super.handleMessage(msg);
