@@ -69,9 +69,11 @@ public class StationListActivity extends ListActivity {
 		sendBundle.putString("server_name", stations[position][0]);
 		sendBundle.putString("listen_url", stations[position][1]);
 		sendBundle.putString("bitrate", stations[position][2]);
+		sendBundle.putLong("startTime", 0);
 		
 		Intent intent = new Intent(view.getContext(), StationListenActivityImg.class);
 		intent.putExtras(sendBundle);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
 	}
 	

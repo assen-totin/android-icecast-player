@@ -1,41 +1,30 @@
 package com.voody.icecast.player;
 
+import java.io.IOException;
+
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.Messenger;
-import android.os.Message;
-import android.os.RemoteException;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.content.Context;
 
-public class StationListenActivityImg extends Activity {
+public class _StationListenActivity extends Activity {
+	private MediaPlayer mediaPlayer = new MediaPlayer();
 	ImageView buttonStop, buttonPlay, buttonFavourite, buttonHome;
 	TextView textViewServerName, textViewListenUrl, textViewBitrate, textViewTimer;
 	String server_name, listen_url, bitrate;
 	Boolean is_favourite = false;
-	Bundle recvBundle, sendBundle;
-	Intent serviceIntent = new Intent(this, StationListenService.class);
+	Bundle recvBundle;
 	
-	SQLiteHelper dbHelper = new SQLiteHelper(StationListenActivityImg.this);
+	SQLiteHelper dbHelper = new SQLiteHelper(_StationListenActivity.this);
 	
-	long startTime = 0;
+	long startTime;
 	Handler timer = new Handler();
-	
-	Boolean keep_playing = false;
-    
-	Handler msgHandler;
-	final Messenger mMessenger = new Messenger(msgHandler);
-	Messenger mService = null;
-    boolean mIsBound;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,7 +37,6 @@ public class StationListenActivityImg extends Activity {
     	server_name = recvBundle.getString("server_name");
     	listen_url = recvBundle.getString("listen_url");
     	bitrate = recvBundle.getString("bitrate");
-    	startTime = recvBundle.getLong("startTime");
 		 	
 		dbHelper.insertIntoRecent(listen_url);
 
@@ -83,47 +71,55 @@ public class StationListenActivityImg extends Activity {
         	buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
         }
         
-		sendBundle.putString("listen_url", listen_url);
-		serviceIntent.putExtras(sendBundle);
-		startService(serviceIntent);
-
-		// we might need a sleep here to let the service start?
-		if (StationListenService.isAlive()) {
-			doBindService();
-		}	
-				
-		if (startTime == 0)
-			// we have just been launched
-			startTime = System.currentTimeMillis();
+		mediaPlayer.reset();
+		try {
+			mediaPlayer.setDataSource(listen_url);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-		timer.postDelayed(runTimer, 100);
+		try {
+			mediaPlayer.prepare();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} 
+		
+		mediaPlayer.start();
 		
 		buttonStop.setEnabled(true);
+		
+		startTime = System.currentTimeMillis();
+		timer.postDelayed(runTimer, 100);
 	}
 	
 	public void onDestroy() {
 		super.onDestroy();
-		if (!keep_playing) {
-			doUnbindService();
-			stopService(serviceIntent);
-		}
+		mediaPlayer.stop();
+		mediaPlayer.release();
 		dbHelper.close();
 	}
+	
+	public void onStop() {
+		super.onStop();
+		mediaPlayer.stop();
+	}	
 	
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
-		savedInstanceState.putLong("startTime", startTime);
-		// set the kepp_playing variable so that the onDestroy method does not stop the player service
-		keep_playing = true;
 	}
 	
 	Button.OnTouchListener buttonStopTouchListener = new Button.OnTouchListener(){
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			// 2 means 'pause'
-	   			sendMessageToService(2);
+	   			mediaPlayer.pause();
 	   			buttonStop.setEnabled(false);
 	   			buttonStop.setImageResource(R.drawable.b2_off);
 	   			buttonPlay.setEnabled(true);
@@ -136,8 +132,7 @@ public class StationListenActivityImg extends Activity {
 	Button.OnTouchListener buttonPlayTouchListener = new Button.OnTouchListener(){
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			// 1 means 'play'
-	   			sendMessageToService(1);
+	   			mediaPlayer.start();
 	   			buttonStop.setEnabled(true);
 	   			buttonStop.setImageResource(R.drawable.b2_on);
 	   			buttonPlay.setEnabled(false);
@@ -168,7 +163,7 @@ public class StationListenActivityImg extends Activity {
 	Button.OnTouchListener buttonHomeTouchListener = new Button.OnTouchListener(){
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			Intent intent = new Intent(StationListenActivityImg.this, MainActivityCircle.class);
+	   			Intent intent = new Intent(_StationListenActivity.this, MainActivityCircle.class);
 	   			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	   			startActivity(intent);
 	   		}
@@ -190,59 +185,4 @@ public class StationListenActivityImg extends Activity {
            timer.postDelayed(runTimer, 1000);
         }
     };
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = new Messenger(service);
-            try {
-                Message msg = Message.obtain(null, StationListenService.MSG_REGISTER_CLIENT);
-                msg.replyTo = mMessenger;
-                mService.send(msg);
-            } catch (RemoteException e) {
-                // In this case the service has crashed before we could even do anything with it
-            }
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been unexpectedly disconnected - process crashed.
-            mService = null;
-        }
-    };
-    
-    private void sendMessageToService(int intvaluetosend) {
-        if (mIsBound) {
-            if (mService != null) {
-                try {
-                    Message msg = Message.obtain(null, StationListenService.MSG_SET_INT_VALUE, intvaluetosend, 0);
-                    msg.replyTo = mMessenger;
-                    mService.send(msg);
-                } catch (RemoteException e) {
-                }
-            }
-        }
-    }
-    
-    void doBindService() {
-        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-    
-    void doUnbindService() {
-        if (mIsBound) {
-            // If we have received the service, and hence registered with it, then now is the time to unregister.
-            if (mService != null) {
-                try {
-                    Message msg = Message.obtain(null, StationListenService.MSG_UNREGISTER_CLIENT);
-                    msg.replyTo = mMessenger;
-                    mService.send(msg);
-                } catch (RemoteException e) {
-                    // There is nothing special we need to do if the service has crashed.
-                }
-            }
-            // Detach our existing connection.
-            unbindService(mConnection);
-            mIsBound = false;
-        }
-    }
-
 } 

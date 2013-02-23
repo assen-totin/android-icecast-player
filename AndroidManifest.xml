@@ -55,6 +55,7 @@
             android:theme="@style/AppTheme"
             android:label="@string/title_manually_add">
         </activity>
+        <service android:enabled="true" android:name=".StationListenService" />
         
     </application>
 
