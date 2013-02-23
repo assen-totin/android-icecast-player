@@ -99,6 +99,8 @@ public class StationListenActivityImg extends Activity {
 		timer.postDelayed(runTimer, 100);
 		
 		buttonStop.setEnabled(true);
+		
+		keep_playing = false;
 	}
 	
 	public void onDestroy() {
