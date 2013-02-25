@@ -1,5 +1,7 @@
 package com.voody.icecast.player;
 
+import java.lang.ref.WeakReference;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -23,7 +25,7 @@ public class StationListenActivityImg extends Activity {
 	String server_name, listen_url, bitrate;
 	Boolean is_favourite = false;
 	Bundle recvBundle, sendBundle;
-	Intent serviceIntent = new Intent(this, StationListenService.class);
+	Intent serviceIntent;
 	
 	SQLiteHelper dbHelper = new SQLiteHelper(StationListenActivityImg.this);
 	
@@ -32,8 +34,7 @@ public class StationListenActivityImg extends Activity {
 	
 	Boolean keep_playing = false;
     
-	Handler msgHandler;
-	final Messenger mMessenger = new Messenger(msgHandler);
+	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
     boolean mIsBound;
 	
@@ -83,7 +84,9 @@ public class StationListenActivityImg extends Activity {
         	buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
         }
         
-		sendBundle.putString("listen_url", listen_url);
+        sendBundle = new Bundle();
+        sendBundle.putString("listen_url", listen_url);
+        serviceIntent = new Intent(this, StationListenService.class);
 		serviceIntent.putExtras(sendBundle);
 		startService(serviceIntent);
 
@@ -247,4 +250,34 @@ public class StationListenActivityImg extends Activity {
         }
     }
 
+    static class IncomingHandler extends Handler { // Handler of incoming messages from clients.
+    	private final WeakReference<StationListenActivityImg> mService;
+    	
+    	IncomingHandler(StationListenActivityImg service) {
+    		mService = new WeakReference<StationListenActivityImg>(service);
+    	}
+    	
+        @Override
+        public void handleMessage(Message msg) {
+        	StationListenActivityImg service = mService.get();       	
+            switch (msg.what) {
+            /*
+            case MSG_REGISTER_CLIENT:
+                service.mClients.add(msg.replyTo);
+                break;
+            case MSG_UNREGISTER_CLIENT:
+                service.mClients.remove(msg.replyTo);
+                break;
+            case MSG_SET_INT_VALUE:
+                if (msg.arg1 == 1)
+                	service.mediaPlayer.start();
+                else if (msg.arg1 == 2)
+                	service.mediaPlayer.pause();
+                break;
+                */
+            default:
+                super.handleMessage(msg);
+            }
+        }
+    }
 } 

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.voody.icecast.player"
-    android:versionCode="2"
-    android:versionName="2.0" >
+    android:versionCode="3"
+    android:versionName="3.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
@@ -55,7 +55,7 @@
             android:theme="@style/AppTheme"
             android:label="@string/title_manually_add">
         </activity>
-        <service android:enabled="true" android:name=".StationListenService" />
+        <service android:enabled="true" android:name="com.voody.icecast.player.StationListenService" />
         
     </application>
 
