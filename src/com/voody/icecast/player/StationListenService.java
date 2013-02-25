@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.util.Log;
 
 public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
@@ -95,12 +96,14 @@ public class StationListenService extends Service {
         	StationListenService service = mService.get();       	
             switch (msg.what) {
             case MSG_REGISTER_CLIENT:
+            	Log.e("DEBUG", "RECV: MSG_REGISTER_CLIENT");
                 service.mClients.add(msg.replyTo);
                 break;
             case MSG_UNREGISTER_CLIENT:
                 service.mClients.remove(msg.replyTo);
                 break;
             case MSG_SET_INT_VALUE:
+            	Log.e("DEBUG", "MSG_SET_INT_VALUE: "+msg.arg1);
                 if (msg.arg1 == 1)
                 	service.mediaPlayer.start();
                 else if (msg.arg1 == 2)

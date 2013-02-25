@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.Messenger;
 import android.os.Message;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +37,7 @@ public class StationListenActivityImg extends Activity {
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
-    boolean mIsBound;
+    boolean mIsBound = false;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,10 +91,8 @@ public class StationListenActivityImg extends Activity {
 		serviceIntent.putExtras(sendBundle);
 		startService(serviceIntent);
 
-		// we might need a sleep here to let the service start?
-		if (StationListenService.isAlive()) {
-			doBindService();
-		}	
+		// We only need this here to wake-up the messenger service which is slow
+		doBindService();
 				
 		if (startTime == 0)
 			// we have just been launched
@@ -199,13 +198,6 @@ public class StationListenActivityImg extends Activity {
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = new Messenger(service);
-            try {
-                Message msg = Message.obtain(null, StationListenService.MSG_REGISTER_CLIENT);
-                msg.replyTo = mMessenger;
-                mService.send(msg);
-            } catch (RemoteException e) {
-                // In this case the service has crashed before we could even do anything with it
-            }
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -215,21 +207,39 @@ public class StationListenActivityImg extends Activity {
     };
     
     private void sendMessageToService(int intvaluetosend) {
-        if (mIsBound) {
-            if (mService != null) {
-                try {
-                    Message msg = Message.obtain(null, StationListenService.MSG_SET_INT_VALUE, intvaluetosend, 0);
-                    msg.replyTo = mMessenger;
-                    mService.send(msg);
-                } catch (RemoteException e) {
-                }
+    	if (!mIsBound)
+    		doBindService();
+        
+    	if (mIsBound) {
+        	Log.e("DEBUG", "mIsBound!");
+            try {
+                Message msg = Message.obtain(null, StationListenService.MSG_SET_INT_VALUE, intvaluetosend, 0);
+                msg.replyTo = mMessenger;
+                mService.send(msg);
+                Log.e("DEBUG", "SENT: "+intvaluetosend);
+            } 
+            catch (RemoteException e) {
             }
         }
     }
     
     void doBindService() {
-        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
+    	if (!mIsBound) {
+    		Log.e("DEBUG", "NOT mIsBound");
+    		bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+    		if (mService != null) {
+    			Log.e("DEBUG", "mService!");
+    			try {
+    				Message msg = Message.obtain(null, StationListenService.MSG_REGISTER_CLIENT);
+    				msg.replyTo = mMessenger;
+    				mService.send(msg);
+    			} 
+    			catch (RemoteException e) {
+    				// In this case the service has crashed before we could even do anything with it
+    			}
+    			mIsBound = true;
+    		}
+    	}
     }
     
     void doUnbindService() {
@@ -240,7 +250,8 @@ public class StationListenActivityImg extends Activity {
                     Message msg = Message.obtain(null, StationListenService.MSG_UNREGISTER_CLIENT);
                     msg.replyTo = mMessenger;
                     mService.send(msg);
-                } catch (RemoteException e) {
+                } 
+                catch (RemoteException e) {
                     // There is nothing special we need to do if the service has crashed.
                 }
             }
