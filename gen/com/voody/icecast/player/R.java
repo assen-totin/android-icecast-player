@@ -91,6 +91,7 @@ public final class R {
         public static final int title_activity_process=0x7f050004;
         public static final int title_activity_stations=0x7f050006;
         public static final int title_manually_add=0x7f050008;
+        public static final int unable_to_load_station=0x7f05001d;
         public static final int url_hint=0x7f05001c;
     }
     public static final class style {

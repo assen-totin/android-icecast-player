@@ -12,12 +12,12 @@ import android.os.IBinder;
 import android.os.Messenger;
 import android.os.Message;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.content.Context;
 
 public class StationListenActivityImg extends Activity {
@@ -211,12 +211,10 @@ public class StationListenActivityImg extends Activity {
     		doBindService();
         
     	if (mIsBound) {
-        	Log.e("DEBUG", "mIsBound!");
             try {
                 Message msg = Message.obtain(null, StationListenService.MSG_SET_INT_VALUE, intvaluetosend, 0);
                 msg.replyTo = mMessenger;
                 mService.send(msg);
-                Log.e("DEBUG", "SENT: "+intvaluetosend);
             } 
             catch (RemoteException e) {
             }
@@ -225,10 +223,8 @@ public class StationListenActivityImg extends Activity {
     
     void doBindService() {
     	if (!mIsBound) {
-    		Log.e("DEBUG", "NOT mIsBound");
     		bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
     		if (mService != null) {
-    			Log.e("DEBUG", "mService!");
     			try {
     				Message msg = Message.obtain(null, StationListenService.MSG_REGISTER_CLIENT);
     				msg.replyTo = mMessenger;
@@ -261,6 +257,11 @@ public class StationListenActivityImg extends Activity {
         }
     }
 
+    void showServiceReply() {
+    	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
+    	toast.show();
+    }
+    
     static class IncomingHandler extends Handler { // Handler of incoming messages from clients.
     	private final WeakReference<StationListenActivityImg> mService;
     	
@@ -279,13 +280,12 @@ public class StationListenActivityImg extends Activity {
             case MSG_UNREGISTER_CLIENT:
                 service.mClients.remove(msg.replyTo);
                 break;
-            case MSG_SET_INT_VALUE:
-                if (msg.arg1 == 1)
-                	service.mediaPlayer.start();
-                else if (msg.arg1 == 2)
-                	service.mediaPlayer.pause();
+            */
+            case StationListenService.MSG_SET_INT_VALUE:
+            	// 1 means failure to load station
+                if (msg.arg1 == 1) 
+                	service.showServiceReply();
                 break;
-                */
             default:
                 super.handleMessage(msg);
             }

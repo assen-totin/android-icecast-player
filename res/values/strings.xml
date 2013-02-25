@@ -29,5 +29,5 @@
     <string name="manually_added">Added the station to Favourites.</string>
     <string name="manually_exists">Station already exists in Favourites.</string>
     <string name="url_hint">http://&#8230;</string>
-    
+    <string name="unable_to_load_station">Unable to play this station.</string>
 </resources>

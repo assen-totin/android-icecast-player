@@ -13,7 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.util.Log;
+import android.os.RemoteException;
 
 public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
@@ -42,6 +42,9 @@ public class StationListenService extends Service {
 			listen_url = recvBundle.getString("listen_url");
               
 		mediaPlayer.reset();
+		
+		mediaPlayer.setOnErrorListener(errListener);
+		
 		try {
 			mediaPlayer.setDataSource(listen_url);
 		} catch (IllegalArgumentException e) {
@@ -82,6 +85,13 @@ public class StationListenService extends Service {
         return mMessenger.getBinder();
     }
 	
+    MediaPlayer.OnErrorListener errListener = new MediaPlayer.OnErrorListener() {
+    	public boolean onError (MediaPlayer mp, int what, int extra) {
+    			sendMessageToUI(1);
+    		return true;
+    	}
+    };
+    
     // This is a bit cumbersome, but having the handler 'static' avoids potential
     // memory leak when a message is put in a queue when the client gone. 
     static class IncomingHandler extends Handler { // Handler of incoming messages from clients.
@@ -96,15 +106,13 @@ public class StationListenService extends Service {
         	StationListenService service = mService.get();       	
             switch (msg.what) {
             case MSG_REGISTER_CLIENT:
-            	Log.e("DEBUG", "RECV: MSG_REGISTER_CLIENT");
-                service.mClients.add(msg.replyTo);
+            	service.mClients.add(msg.replyTo);
                 break;
             case MSG_UNREGISTER_CLIENT:
                 service.mClients.remove(msg.replyTo);
                 break;
             case MSG_SET_INT_VALUE:
-            	Log.e("DEBUG", "MSG_SET_INT_VALUE: "+msg.arg1);
-                if (msg.arg1 == 1)
+            	if (msg.arg1 == 1)
                 	service.mediaPlayer.start();
                 else if (msg.arg1 == 2)
                 	service.mediaPlayer.pause();
@@ -115,7 +123,7 @@ public class StationListenService extends Service {
         }
     }
     
-    /*
+    
     // Here is how to send reply back to the registered clients. 
     private void sendMessageToUI(int intvaluetosend) {
         for (int i=mClients.size()-1; i>=0; i--) {
@@ -123,18 +131,20 @@ public class StationListenService extends Service {
                 // Send data as an Integer
                 mClients.get(i).send(Message.obtain(null, MSG_SET_INT_VALUE, intvaluetosend, 0));
 
+                /*
                 //Send data as a String
                 Bundle b = new Bundle();
-                b.putString("str1", "ab" + intvaluetosend + "cd");
-                Message msg = Message.obtain(null, MSG_SET_STRING_VALUE);
+                b.putString("reply", "abc" + intvaluetosend);
+                Message msg = Message.obtain(null, MSG_SET_INT_VALUE);
                 msg.setData(b);
                 mClients.get(i).send(msg);
-
-            } catch (RemoteException e) {
+                */
+            }
+            catch (RemoteException e) {
                 // The client is dead. Remove it from the list; we are going through the list from back to front so this is safe to do inside the loop.
                 mClients.remove(i);
             }
         }
     }
-     */
+    
 } 
