@@ -20,12 +20,12 @@ public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
 	String listen_url;
 	Bundle recvBundle;
+	private int now_playing = 0;
 	
 	long startTime;
 	Handler timer = new Handler();
 	
 	private static boolean isAlive = true;
-	static final int MSG_NOOP = 0;
 	static final int MSG_REGISTER_CLIENT = 1;
     static final int MSG_UNREGISTER_CLIENT = 2;
     static final int MSG_SET_INT_VALUE = 3;
@@ -49,23 +49,28 @@ public class StationListenService extends Service {
 		try {
 			mediaPlayer.setDataSource(listen_url);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			now_playing = -1;
 		} catch (IllegalStateException e) {
-			e.printStackTrace();
+			now_playing = -1;
 		} catch (IOException e) {
-			e.printStackTrace();
+			now_playing = -1;
 		}
 		
 		try {
 			mediaPlayer.prepare();
 		} catch (IOException e) {
-			e.printStackTrace();
+			now_playing = -1;
 		} catch (IllegalStateException e) {
-			e.printStackTrace();
+			now_playing = -1;
 		} 
 		
-		mediaPlayer.start();
 		
+		// If no error so far, start
+		if (now_playing == 0) {
+			mediaPlayer.start();
+			now_playing = 1;
+			sendMessageToUI(now_playing);
+		}
 		return START_STICKY;
 	}
 	
@@ -89,7 +94,8 @@ public class StationListenService extends Service {
     MediaPlayer.OnErrorListener errListener = new MediaPlayer.OnErrorListener() {
     	public boolean onError (MediaPlayer mp, int what, int extra) {
     			Log.e("DEBUG", "SERVICE onErrorListener");
-    			sendMessageToUI(1);
+    			now_playing = -1;
+    			sendMessageToUI(now_playing);
     		return true;
     	}
     };
@@ -120,9 +126,6 @@ public class StationListenService extends Service {
                 else if (msg.arg1 == 2)
                 	service.mediaPlayer.pause();
                 break;
-            case MSG_NOOP:
-            	// Just a placehodler 
-            	break;
             default:
                 super.handleMessage(msg);
             }

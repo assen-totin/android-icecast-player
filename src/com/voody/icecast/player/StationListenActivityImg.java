@@ -35,7 +35,7 @@ public class StationListenActivityImg extends Activity {
 	Handler timer = new Handler();
 	
 	Boolean keep_playing = false;
-	Boolean service_is_playing = true;
+	Boolean service_is_playing = false;
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
@@ -59,10 +59,12 @@ public class StationListenActivityImg extends Activity {
         buttonStop = (ImageView)findViewById(R.id.stop);
         buttonStop.setOnTouchListener(buttonStopTouchListener);
         buttonStop.setEnabled(false);
+        buttonStop.setImageResource(R.drawable.b2_off);
 		
         buttonPlay = (ImageView)findViewById(R.id.play);
         buttonPlay.setOnTouchListener(buttonPlayTouchListener);
         buttonPlay.setEnabled(false);
+        buttonPlay.setImageResource(R.drawable.b1_off);
         
         buttonFavourite = (ImageView)findViewById(R.id.favourite);
         buttonFavourite.setOnTouchListener(buttonFavouriteTouchListener);
@@ -91,21 +93,21 @@ public class StationListenActivityImg extends Activity {
         sendBundle.putString("listen_url", listen_url);
         serviceIntent = new Intent(this, StationListenService.class);
 		serviceIntent.putExtras(sendBundle);
+		startService(serviceIntent);
 		// We only need this here to wake-up the messenger service which is slow
 		doBindService();
 		// Poke the service with NOOP to get any error on stream init 
-		sendMessageToService(StationListenService.MSG_NOOP);
-		startService(serviceIntent);
+		sendMessageToService(0);
 				
 		if (startTime == 0)
 			// we have just been launched
 			startTime = System.currentTimeMillis();
-		timer.postDelayed(runTimer, 100);
-			
-		keep_playing = false;
-			
-		if (service_is_playing) 
-			buttonStop.setEnabled(true);
+		
+		if (service_is_playing) {
+			timer.postDelayed(runTimer, 100);
+   			buttonStop.setEnabled(true);
+   			buttonStop.setImageResource(R.drawable.b2_on);
+		} 
 	}
 	
 	public void onDestroy() {
@@ -260,9 +262,7 @@ public class StationListenActivityImg extends Activity {
         }
     }
 
-    void showServiceReply() {
-    	service_is_playing = false;
-    	
+    void showError() {  	
     	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
     	toast.show();
     }
@@ -290,7 +290,9 @@ public class StationListenActivityImg extends Activity {
             case StationListenService.MSG_SET_INT_VALUE:
             	// 1 means failure to load station
                 if (msg.arg1 == 1) 
-                	service.showServiceReply();
+                	service.service_is_playing = true;
+                else
+                	service.service_is_playing = false;
                 break;
             default:
                 super.handleMessage(msg);
