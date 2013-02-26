@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.util.Log;
 
 public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
@@ -24,7 +25,8 @@ public class StationListenService extends Service {
 	Handler timer = new Handler();
 	
 	private static boolean isAlive = true;
-    static final int MSG_REGISTER_CLIENT = 1;
+	static final int MSG_NOOP = 0;
+	static final int MSG_REGISTER_CLIENT = 1;
     static final int MSG_UNREGISTER_CLIENT = 2;
     static final int MSG_SET_INT_VALUE = 3;
     static final int MSG_SET_STRING_VALUE = 4;
@@ -34,6 +36,7 @@ public class StationListenService extends Service {
     
 	public void onCreate() {
 		 mediaPlayer = new MediaPlayer();
+		 mediaPlayer.setOnErrorListener(errListener);
 	}
 	
 	public int onStartCommand(Intent intent, int flags, int startid) {
@@ -42,8 +45,6 @@ public class StationListenService extends Service {
 			listen_url = recvBundle.getString("listen_url");
               
 		mediaPlayer.reset();
-		
-		mediaPlayer.setOnErrorListener(errListener);
 		
 		try {
 			mediaPlayer.setDataSource(listen_url);
@@ -87,6 +88,7 @@ public class StationListenService extends Service {
 	
     MediaPlayer.OnErrorListener errListener = new MediaPlayer.OnErrorListener() {
     	public boolean onError (MediaPlayer mp, int what, int extra) {
+    			Log.e("DEBUG", "SERVICE onErrorListener");
     			sendMessageToUI(1);
     		return true;
     	}
@@ -107,6 +109,7 @@ public class StationListenService extends Service {
             switch (msg.what) {
             case MSG_REGISTER_CLIENT:
             	service.mClients.add(msg.replyTo);
+            	Log.e("DEBUG", "SERVICE MSG_REGISTER_CLIENT");
                 break;
             case MSG_UNREGISTER_CLIENT:
                 service.mClients.remove(msg.replyTo);
@@ -117,6 +120,9 @@ public class StationListenService extends Service {
                 else if (msg.arg1 == 2)
                 	service.mediaPlayer.pause();
                 break;
+            case MSG_NOOP:
+            	// Just a placehodler 
+            	break;
             default:
                 super.handleMessage(msg);
             }
@@ -126,11 +132,13 @@ public class StationListenService extends Service {
     
     // Here is how to send reply back to the registered clients. 
     private void sendMessageToUI(int intvaluetosend) {
+    	Log.e("DEBUG", "SERVICE in sendMessageToUI: "+intvaluetosend);
         for (int i=mClients.size()-1; i>=0; i--) {
+        	Log.e("DEBUG", "SERVICE in sendMessageToUI client ID: "+i);
             try {
                 // Send data as an Integer
                 mClients.get(i).send(Message.obtain(null, MSG_SET_INT_VALUE, intvaluetosend, 0));
-
+                Log.e("DEBUG", "SERVICE SENT: "+intvaluetosend);
                 /*
                 //Send data as a String
                 Bundle b = new Bundle();

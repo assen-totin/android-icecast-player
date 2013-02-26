@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.Messenger;
 import android.os.Message;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +35,7 @@ public class StationListenActivityImg extends Activity {
 	Handler timer = new Handler();
 	
 	Boolean keep_playing = false;
+	Boolean service_is_playing = true;
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
@@ -89,20 +91,21 @@ public class StationListenActivityImg extends Activity {
         sendBundle.putString("listen_url", listen_url);
         serviceIntent = new Intent(this, StationListenService.class);
 		serviceIntent.putExtras(sendBundle);
-		startService(serviceIntent);
-
 		// We only need this here to wake-up the messenger service which is slow
 		doBindService();
+		// Poke the service with NOOP to get any error on stream init 
+		sendMessageToService(StationListenService.MSG_NOOP);
+		startService(serviceIntent);
 				
 		if (startTime == 0)
 			// we have just been launched
 			startTime = System.currentTimeMillis();
-		
 		timer.postDelayed(runTimer, 100);
-		
-		buttonStop.setEnabled(true);
-		
+			
 		keep_playing = false;
+			
+		if (service_is_playing) 
+			buttonStop.setEnabled(true);
 	}
 	
 	public void onDestroy() {
@@ -258,6 +261,8 @@ public class StationListenActivityImg extends Activity {
     }
 
     void showServiceReply() {
+    	service_is_playing = false;
+    	
     	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
     	toast.show();
     }
@@ -271,7 +276,8 @@ public class StationListenActivityImg extends Activity {
     	
         @Override
         public void handleMessage(Message msg) {
-        	StationListenActivityImg service = mService.get();       	
+        	StationListenActivityImg service = mService.get();   
+        	Log.e("DEBUG", "ACTIVITY RECV: " + msg.arg1);
             switch (msg.what) {
             /*
             case MSG_REGISTER_CLIENT:
