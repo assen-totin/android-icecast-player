@@ -64,13 +64,16 @@ public class StationListenService extends Service {
 			now_playing = -1;
 		} 
 		
-		
+		// Don't start playback yet, wait for a client command.
+		/*
 		// If no error so far, start
 		if (now_playing == 0) {
 			mediaPlayer.start();
 			now_playing = 1;
 			sendMessageToUI(now_playing);
 		}
+		*/
+		
 		return START_STICKY;
 	}
 	
@@ -93,7 +96,7 @@ public class StationListenService extends Service {
 	
     MediaPlayer.OnErrorListener errListener = new MediaPlayer.OnErrorListener() {
     	public boolean onError (MediaPlayer mp, int what, int extra) {
-    			Log.e("DEBUG", "SERVICE onErrorListener");
+    			//Log.e("DEBUG", "SERVICE onErrorListener");
     			now_playing = -1;
     			sendMessageToUI(now_playing);
     		return true;
@@ -115,14 +118,19 @@ public class StationListenService extends Service {
             switch (msg.what) {
             case MSG_REGISTER_CLIENT:
             	service.mClients.add(msg.replyTo);
-            	Log.e("DEBUG", "SERVICE MSG_REGISTER_CLIENT");
+            	//Log.e("DEBUG", "SERVICE MSG_REGISTER_CLIENT");
                 break;
             case MSG_UNREGISTER_CLIENT:
                 service.mClients.remove(msg.replyTo);
                 break;
             case MSG_SET_INT_VALUE:
-            	if (msg.arg1 == 1)
+            	if (msg.arg1 == 1) {
                 	service.mediaPlayer.start();
+                	if (service.now_playing == 0) {
+                		service.now_playing = 1;
+                		service.sendMessageToUI(service.now_playing);
+                	}
+            	}
                 else if (msg.arg1 == 2)
                 	service.mediaPlayer.pause();
                 break;
@@ -135,13 +143,13 @@ public class StationListenService extends Service {
     
     // Here is how to send reply back to the registered clients. 
     private void sendMessageToUI(int intvaluetosend) {
-    	Log.e("DEBUG", "SERVICE in sendMessageToUI: "+intvaluetosend);
+    	//Log.e("DEBUG", "SERVICE in sendMessageToUI: "+intvaluetosend);
         for (int i=mClients.size()-1; i>=0; i--) {
-        	Log.e("DEBUG", "SERVICE in sendMessageToUI client ID: "+i);
+        	//Log.e("DEBUG", "SERVICE in sendMessageToUI client ID: "+i);
             try {
                 // Send data as an Integer
                 mClients.get(i).send(Message.obtain(null, MSG_SET_INT_VALUE, intvaluetosend, 0));
-                Log.e("DEBUG", "SERVICE SENT: "+intvaluetosend);
+                //Log.e("DEBUG", "SERVICE SENT: "+intvaluetosend);
                 /*
                 //Send data as a String
                 Bundle b = new Bundle();

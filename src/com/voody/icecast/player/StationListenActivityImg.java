@@ -35,7 +35,6 @@ public class StationListenActivityImg extends Activity {
 	Handler timer = new Handler();
 	
 	Boolean keep_playing = false;
-	Boolean service_is_playing = false;
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
@@ -89,25 +88,23 @@ public class StationListenActivityImg extends Activity {
         	buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
         }
         
-        sendBundle = new Bundle();
-        sendBundle.putString("listen_url", listen_url);
-        serviceIntent = new Intent(this, StationListenService.class);
-		serviceIntent.putExtras(sendBundle);
-		startService(serviceIntent);
-		// We only need this here to wake-up the messenger service which is slow
-		doBindService();
-		// Poke the service with NOOP to get any error on stream init 
-		sendMessageToService(0);
-				
-		if (startTime == 0)
+        // We have been launched, not resurrected for config (screen orientation) change
+        if (startTime == 0) {
+        	// Start our service
+        	sendBundle = new Bundle();
+        	sendBundle.putString("listen_url", listen_url);
+        	serviceIntent = new Intent(this, StationListenService.class);
+        	serviceIntent.putExtras(sendBundle);
+        	// Start the service - the playback won't yet begin
+        	startService(serviceIntent);
+        	// We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
+        	doBindService();
+        	// Send a 'play' command after the service connection is up & ruinning
+        	timer.postDelayed(startPlayback, 2000);
+        	
 			// we have just been launched
 			startTime = System.currentTimeMillis();
-		
-		if (service_is_playing) {
-			timer.postDelayed(runTimer, 100);
-   			buttonStop.setEnabled(true);
-   			buttonStop.setImageResource(R.drawable.b2_on);
-		} 
+        }
 	}
 	
 	public void onDestroy() {
@@ -200,6 +197,18 @@ public class StationListenActivityImg extends Activity {
         }
     };
 
+	Runnable startPlayback = new Runnable(){
+        public void run() {
+        	sendMessageToService(1);
+        }
+    };
+    
+    void setButtons() {
+		timer.postDelayed(runTimer, 100);
+		buttonStop.setEnabled(true);
+		buttonStop.setImageResource(R.drawable.b2_on);
+    }
+    
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = new Messenger(service);
@@ -228,6 +237,7 @@ public class StationListenActivityImg extends Activity {
     
     void doBindService() {
     	if (!mIsBound) {
+    		// Note: this is non-blocking and returns immediately, even if mConnection is not ready yet and mService is still NULL
     		bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
     		if (mService != null) {
     			try {
@@ -277,7 +287,7 @@ public class StationListenActivityImg extends Activity {
         @Override
         public void handleMessage(Message msg) {
         	StationListenActivityImg service = mService.get();   
-        	Log.e("DEBUG", "ACTIVITY RECV: " + msg.arg1);
+        	//Log.e("DEBUG", "ACTIVITY RECV: " + msg.arg1);
             switch (msg.what) {
             /*
             case MSG_REGISTER_CLIENT:
@@ -290,9 +300,9 @@ public class StationListenActivityImg extends Activity {
             case StationListenService.MSG_SET_INT_VALUE:
             	// 1 means failure to load station
                 if (msg.arg1 == 1) 
-                	service.service_is_playing = true;
+                	service.setButtons();
                 else
-                	service.service_is_playing = false;
+                	service.showError();
                 break;
             default:
                 super.handleMessage(msg);
