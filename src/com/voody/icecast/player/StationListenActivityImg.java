@@ -157,12 +157,12 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    	server_name = recvBundle.getString("server_name");
-    	listen_url = recvBundle.getString("listen_url");
-    	bitrate = recvBundle.getString("bitrate");
-    	startTime = recvBundle.getLong("startTime");
-        buttonPauseState = recvBundle.getBoolean("buttonPauseState");
-        buttonPlayState = recvBundle.getBoolean("buttonPlayState");
+    	server_name = savedInstanceState.getString("server_name");
+    	listen_url = savedInstanceState.getString("listen_url");
+    	bitrate = savedInstanceState.getString("bitrate");
+    	startTime = savedInstanceState.getLong("startTime");
+        buttonPauseState = savedInstanceState.getBoolean("buttonPauseState");
+        buttonPlayState = savedInstanceState.getBoolean("buttonPlayState");
         Log.e("DEBUG", "onRestore startTime: " + startTime);
 	}
 	
