@@ -107,6 +107,12 @@ public class StationListenActivityImg extends Activity {
         }
 	}
 	
+	public void onStart() {
+		super.onStart();
+        // We need this here despite the default because of task-switching
+        keep_playing = false;
+	}
+	
 	public void onDestroy() {
 		super.onDestroy();
 		if (!keep_playing) {
