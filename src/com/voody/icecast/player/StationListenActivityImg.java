@@ -22,7 +22,7 @@ import android.widget.Toast;
 import android.content.Context;
 
 public class StationListenActivityImg extends Activity {
-	ImageView buttonStop, buttonPlay, buttonFavourite, buttonHome;
+	ImageView buttonPause, buttonPlay, buttonFavourite, buttonHome;
 	TextView textViewServerName, textViewListenUrl, textViewBitrate, textViewTimer;
 	String server_name, listen_url, bitrate;
 	Boolean is_favourite = false;
@@ -35,12 +35,15 @@ public class StationListenActivityImg extends Activity {
 	Handler timer = new Handler();
 	
 	Boolean keep_playing = false;
+	Boolean buttonPlayState = false;
+	Boolean buttonPauseState = false;
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
     boolean mIsBound = false;
 	
-	public void onCreate(Bundle savedInstanceState) {
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_url_img);
 		
@@ -55,15 +58,13 @@ public class StationListenActivityImg extends Activity {
 		 	
 		dbHelper.insertIntoRecent(listen_url);
 
-        buttonStop = (ImageView)findViewById(R.id.stop);
-        buttonStop.setOnTouchListener(buttonStopTouchListener);
-        buttonStop.setEnabled(false);
-        buttonStop.setImageResource(R.drawable.b2_off);
+        buttonPause = (ImageView)findViewById(R.id.stop);
+        buttonPause.setOnTouchListener(buttonPauseTouchListener);
+        buttonPauseState = recvBundle.getBoolean("buttonPauseState");
 		
         buttonPlay = (ImageView)findViewById(R.id.play);
         buttonPlay.setOnTouchListener(buttonPlayTouchListener);
-        buttonPlay.setEnabled(false);
-        buttonPlay.setImageResource(R.drawable.b1_off);
+        buttonPlayState = recvBundle.getBoolean("buttonPlayState");
         
         buttonFavourite = (ImageView)findViewById(R.id.favourite);
         buttonFavourite.setOnTouchListener(buttonFavouriteTouchListener);
@@ -87,7 +88,13 @@ public class StationListenActivityImg extends Activity {
         	buttonFavourite.setImageResource(R.drawable.b3_del);
         	buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
         }
-        
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		
+		Log.e("DEBUG", "onStart startTime: " + startTime);
         // We have been launched, not resurrected for config (screen orientation) change
         if (startTime == 0) {
         	// Start our service
@@ -99,20 +106,33 @@ public class StationListenActivityImg extends Activity {
         	startService(serviceIntent);
         	// We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
         	doBindService();
-        	// Send a 'play' command after the service connection is up & ruinning
+        	// Send a 'play' command after the service connection is up & running
         	timer.postDelayed(startPlayback, 2000);
         	
 			// we have just been launched
 			startTime = System.currentTimeMillis();
+			Log.e("DEBUG", "onStart startTime: " + startTime);
         }
-	}
-	
-	public void onStart() {
-		super.onStart();
+        else {
+        	// We have been resurrected - re-launch timer update
+        	timer.postDelayed(runTimer, 100);        	
+        }
+		
+		// Query the service if it is running
+		sendMessageToService(3);
+		setButtonsState();
+		
         // We need this here despite the default because of task-switching
-        keep_playing = false;
+        keep_playing = false;       
 	}
 	
+	@Override
+	public void onStop() {
+		super.onStop();
+		doUnbindService();
+	}
+	
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		if (!keep_playing) {
@@ -122,24 +142,38 @@ public class StationListenActivityImg extends Activity {
 		dbHelper.close();
 	}
 	
+	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
 		savedInstanceState.putLong("startTime", startTime);
-		// set the kepp_playing variable so that the onDestroy method does not stop the player service
+		savedInstanceState.putBoolean("buttonPlayState", buttonPlayState);
+		savedInstanceState.putBoolean("buttonPauseState", buttonPauseState);
+		// set the keep_playing variable so that the onDestroy method does not stop the player service
 		keep_playing = true;
+		Log.e("DEBUG", "onSave startTime: " + startTime);
 	}
 	
-	Button.OnTouchListener buttonStopTouchListener = new Button.OnTouchListener(){
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    	server_name = recvBundle.getString("server_name");
+    	listen_url = recvBundle.getString("listen_url");
+    	bitrate = recvBundle.getString("bitrate");
+    	startTime = recvBundle.getLong("startTime");
+        buttonPauseState = recvBundle.getBoolean("buttonPauseState");
+        buttonPlayState = recvBundle.getBoolean("buttonPlayState");
+        Log.e("DEBUG", "onRestore startTime: " + startTime);
+	}
+	
+	Button.OnTouchListener buttonPauseTouchListener = new Button.OnTouchListener(){
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			// 2 means 'pause'
-	   			sendMessageToService(2);
-	   			buttonStop.setEnabled(false);
-	   			buttonStop.setImageResource(R.drawable.b2_off);
-	   			buttonPlay.setEnabled(true);
-	   			buttonPlay.setImageResource(R.drawable.b1_on);
+	   			// 5 means 'pause'
+	   			sendMessageToService(5);
+	   			buttonPauseState = false;
+	   			buttonPlayState = true;
+	   			setButtonsState();
 	   		}
 	       	return true;
 	   	}
@@ -148,12 +182,11 @@ public class StationListenActivityImg extends Activity {
 	Button.OnTouchListener buttonPlayTouchListener = new Button.OnTouchListener(){
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			// 1 means 'play'
-	   			sendMessageToService(1);
-	   			buttonStop.setEnabled(true);
-	   			buttonStop.setImageResource(R.drawable.b2_on);
-	   			buttonPlay.setEnabled(false);
-	   			buttonPlay.setImageResource(R.drawable.b1_off);
+	   			// 10 means 'play'
+	   			sendMessageToService(10);
+	   			buttonPauseState = true;
+	   			buttonPlayState = false;
+	   			setButtonsState();
 	   		}
 	       	return true;
 	   	}
@@ -205,16 +238,48 @@ public class StationListenActivityImg extends Activity {
 
 	Runnable startPlayback = new Runnable(){
         public void run() {
-        	sendMessageToService(1);
+        	sendMessageToService(10);
         }
     };
     
-    void setButtons() {
-		timer.postDelayed(runTimer, 100);
-		buttonStop.setEnabled(true);
-		buttonStop.setImageResource(R.drawable.b2_on);
+    void setButtonsState() {
+    	if (buttonPlayState) {
+    		buttonPlay.setEnabled(true);
+    		buttonPlay.setImageResource(R.drawable.b1_on);
+    	}
+    	else {
+    		buttonPlay.setEnabled(false);
+    		buttonPlay.setImageResource(R.drawable.b1_off);
+    	}
+    	
+    	if (buttonPauseState) {
+    		buttonPause.setEnabled(true);
+    		buttonPause.setImageResource(R.drawable.b2_on);
+    	}
+    	else {
+    		buttonPause.setEnabled(false);
+    		buttonPause.setImageResource(R.drawable.b2_off);
+    	}
     }
     
+    void startPlaying() {
+		timer.postDelayed(runTimer, 100);
+		buttonPauseState = true;
+		buttonPlayState = false;
+		setButtonsState();
+    }
+
+    void pausePlaying() {
+ 		buttonPauseState = false;
+ 		buttonPlayState = true;
+ 		setButtonsState();
+     }
+    
+    void showError() {  	
+    	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
+    	toast.show();
+    }
+        
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = new Messenger(service);
@@ -277,12 +342,7 @@ public class StationListenActivityImg extends Activity {
             mIsBound = false;
         }
     }
-
-    void showError() {  	
-    	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
-    	toast.show();
-    }
-    
+   
     static class IncomingHandler extends Handler { // Handler of incoming messages from clients.
     	private final WeakReference<StationListenActivityImg> mService;
     	
@@ -304,11 +364,12 @@ public class StationListenActivityImg extends Activity {
                 break;
             */
             case StationListenService.MSG_SET_INT_VALUE:
-            	// 1 means failure to load station
-                if (msg.arg1 == 1) 
-                	service.setButtons();
-                else
+                if (msg.arg1 == -1)
                 	service.showError();
+                else if (msg.arg1 == 5)
+                	service.pausePlaying();               	
+                else if (msg.arg1 == 10)
+                	service.startPlaying();
                 break;
             default:
                 super.handleMessage(msg);

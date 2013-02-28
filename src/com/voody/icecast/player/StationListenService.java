@@ -20,7 +20,8 @@ public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
 	String listen_url;
 	Bundle recvBundle;
-	private int now_playing = 0;
+	
+	private int playback_status = 0;	// 0 - initializing, -1 error, 5 paused, 10 playing 
 	
 	long startTime;
 	Handler timer = new Handler();
@@ -49,28 +50,28 @@ public class StationListenService extends Service {
 		try {
 			mediaPlayer.setDataSource(listen_url);
 		} catch (IllegalArgumentException e) {
-			now_playing = -1;
+			playback_status = -1;
 		} catch (IllegalStateException e) {
-			now_playing = -1;
+			playback_status = -1;
 		} catch (IOException e) {
-			now_playing = -1;
+			playback_status = -1;
 		}
 		
 		try {
 			mediaPlayer.prepare();
 		} catch (IOException e) {
-			now_playing = -1;
+			playback_status = -1;
 		} catch (IllegalStateException e) {
-			now_playing = -1;
+			playback_status = -1;
 		} 
 		
 		// Don't start playback yet, wait for a client command.
 		/*
 		// If no error so far, start
-		if (now_playing == 0) {
+		if (playback_status == 0) {
 			mediaPlayer.start();
-			now_playing = 1;
-			sendMessageToUI(now_playing);
+			playback_status = 1;
+			sendMessageToUI(playback_status);
 		}
 		*/
 		
@@ -97,8 +98,8 @@ public class StationListenService extends Service {
     MediaPlayer.OnErrorListener errListener = new MediaPlayer.OnErrorListener() {
     	public boolean onError (MediaPlayer mp, int what, int extra) {
     			//Log.e("DEBUG", "SERVICE onErrorListener");
-    			now_playing = -1;
-    			sendMessageToUI(now_playing);
+    			playback_status = -1;
+    			sendMessageToUI(playback_status);
     		return true;
     	}
     };
@@ -124,15 +125,19 @@ public class StationListenService extends Service {
                 service.mClients.remove(msg.replyTo);
                 break;
             case MSG_SET_INT_VALUE:
-            	if (msg.arg1 == 1) {
+            	if (msg.arg1 == 10) {
+            		// Start playback
                 	service.mediaPlayer.start();
-                	if (service.now_playing == 0) {
-                		service.now_playing = 1;
-                		service.sendMessageToUI(service.now_playing);
-                	}
+                	if (service.playback_status >= 0)
+                		service.playback_status = 10;
             	}
-                else if (msg.arg1 == 2)
+                else if (msg.arg1 == 5) {
+                	// Pause playback
                 	service.mediaPlayer.pause();
+                	if (service.playback_status >= 0)
+                		service.playback_status = 5;
+                }
+            	service.sendMessageToUI(service.playback_status);
                 break;
             default:
                 super.handleMessage(msg);

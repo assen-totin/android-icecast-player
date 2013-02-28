@@ -70,6 +70,8 @@ public class StationListActivity extends ListActivity {
 		sendBundle.putString("listen_url", stations[position][1]);
 		sendBundle.putString("bitrate", stations[position][2]);
 		sendBundle.putLong("startTime", 0);
+		sendBundle.putBoolean("buttonPlayState", false);
+		sendBundle.putBoolean("buttonPauseState", false);
 		
 		Intent intent = new Intent(view.getContext(), StationListenActivityImg.class);
 		intent.putExtras(sendBundle);
