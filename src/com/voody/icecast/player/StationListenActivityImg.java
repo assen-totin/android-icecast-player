@@ -142,7 +142,6 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
-		Log.e("DEBUG", "onSaveInstanceState");
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
