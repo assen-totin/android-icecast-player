@@ -32,7 +32,8 @@ public class StationListenActivityImg extends Activity {
 	SQLiteHelper dbHelper = new SQLiteHelper(StationListenActivityImg.this);
 	
 	long startTime = 0;
-	Handler timer = new Handler();
+	Handler runTimerHandler = new Handler();
+	static Handler runDelayedHandler = new Handler();
 	
 	Boolean keep_playing = false;
 	Boolean buttonPlayState = false;
@@ -94,7 +95,6 @@ public class StationListenActivityImg extends Activity {
 	public void onStart() {
 		super.onStart();
 		
-		Log.e("DEBUG", "onStart startTime: " + startTime);
         // We have been launched, not resurrected for config (screen orientation) change
         if (startTime == 0) {
         	// Start our service
@@ -102,25 +102,23 @@ public class StationListenActivityImg extends Activity {
         	sendBundle.putString("listen_url", listen_url);
         	serviceIntent = new Intent(this, StationListenService.class);
         	serviceIntent.putExtras(sendBundle);
-        	// Start the service - the playback won't yet begin
+        	// Start the service - the playback will begin as soon as it is ready
         	startService(serviceIntent);
         	// We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
         	doBindService();
-        	// Send a 'play' command after the service connection is up & running
-        	timer.postDelayed(startPlayback, 2000);
         	
 			// we have just been launched
 			startTime = System.currentTimeMillis();
-			Log.e("DEBUG", "onStart startTime: " + startTime);
+			
+			// Schedule a query to the service - 5 seconds from now (messaging is slow to wake up)
+			runDelayedHandler.postDelayed(runDelayed, 5000);
         }
         else {
         	// We have been resurrected - re-launch timer update
-        	timer.postDelayed(runTimer, 100);        	
+        	runTimerHandler.postDelayed(runTimer, 100);        	
         }
 		
-		// Query the service if it is running
-		sendMessageToService(3);
-		setButtonsState();
+        setButtonsState();
 		
         // We need this here despite the default because of task-switching
         keep_playing = false;       
@@ -128,22 +126,23 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	public void onStop() {
-		super.onStop();
 		doUnbindService();
+		super.onStop();
 	}
 	
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
 		if (!keep_playing) {
-			doUnbindService();
+			//doUnbindService();
 			stopService(serviceIntent);
 		}
 		dbHelper.close();
+		super.onDestroy();
 	}
 	
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		Log.e("DEBUG", "onSaveInstanceState");
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
@@ -152,7 +151,6 @@ public class StationListenActivityImg extends Activity {
 		savedInstanceState.putBoolean("buttonPauseState", buttonPauseState);
 		// set the keep_playing variable so that the onDestroy method does not stop the player service
 		keep_playing = true;
-		Log.e("DEBUG", "onSave startTime: " + startTime);
 	}
 	
 	@Override
@@ -163,7 +161,6 @@ public class StationListenActivityImg extends Activity {
     	startTime = savedInstanceState.getLong("startTime");
         buttonPauseState = savedInstanceState.getBoolean("buttonPauseState");
         buttonPlayState = savedInstanceState.getBoolean("buttonPlayState");
-        Log.e("DEBUG", "onRestore startTime: " + startTime);
 	}
 	
 	Button.OnTouchListener buttonPauseTouchListener = new Button.OnTouchListener(){
@@ -221,6 +218,13 @@ public class StationListenActivityImg extends Activity {
 	   	}
 	};
 	
+	Runnable runDelayed = new Runnable(){
+        public void run() {
+    		// Query the service if it is running
+    		sendMessageToService(99);
+        }
+    };
+    
 	Runnable runTimer = new Runnable(){
         public void run() {
            long diffTimeMillis = System.currentTimeMillis() - startTime;
@@ -232,13 +236,7 @@ public class StationListenActivityImg extends Activity {
 
            textViewTimer.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
            
-           timer.postDelayed(runTimer, 1000);
-        }
-    };
-
-	Runnable startPlayback = new Runnable(){
-        public void run() {
-        	sendMessageToService(10);
+           runTimerHandler.postDelayed(runTimer, 1000);
         }
     };
     
@@ -263,7 +261,7 @@ public class StationListenActivityImg extends Activity {
     }
     
     void startPlaying() {
-		timer.postDelayed(runTimer, 100);
+    	runTimerHandler.postDelayed(runTimer, 100);
 		buttonPauseState = true;
 		buttonPlayState = false;
 		setButtonsState();
@@ -353,7 +351,6 @@ public class StationListenActivityImg extends Activity {
         @Override
         public void handleMessage(Message msg) {
         	StationListenActivityImg service = mService.get();   
-        	//Log.e("DEBUG", "ACTIVITY RECV: " + msg.arg1);
             switch (msg.what) {
             /*
             case MSG_REGISTER_CLIENT:
@@ -366,6 +363,8 @@ public class StationListenActivityImg extends Activity {
             case StationListenService.MSG_SET_INT_VALUE:
                 if (msg.arg1 == -1)
                 	service.showError();
+                else if (msg.arg1 == 0)
+                	runDelayedHandler.postDelayed(service.runDelayed, 5000);
                 else if (msg.arg1 == 5)
                 	service.pausePlaying();               	
                 else if (msg.arg1 == 10)
