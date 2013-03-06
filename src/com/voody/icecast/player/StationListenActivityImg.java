@@ -92,6 +92,12 @@ public class StationListenActivityImg extends Activity {
 	}
 	
 	@Override
+	public void onRestart() {
+		// Just to make it non-zero
+		startTime = System.currentTimeMillis();
+	}
+	
+	@Override
 	public void onStart() {
 		super.onStart();
 		
@@ -110,8 +116,8 @@ public class StationListenActivityImg extends Activity {
 			// we have just been launched
 			startTime = System.currentTimeMillis();
 			
-			// Schedule a query to the service - 5 seconds from now (messaging is slow to wake up)
-			runDelayedHandler.postDelayed(runDelayed, 5000);
+			// Schedule a query to the service - 1 second from now (messaging is slow to wake up)
+			runDelayedHandler.postDelayed(runDelayed, 1000);
         }
         else {
         	// We have been resurrected - re-launch timer update
@@ -160,6 +166,7 @@ public class StationListenActivityImg extends Activity {
     	startTime = savedInstanceState.getLong("startTime");
         buttonPauseState = savedInstanceState.getBoolean("buttonPauseState");
         buttonPlayState = savedInstanceState.getBoolean("buttonPlayState");
+        setButtonsState();
 	}
 	
 	Button.OnTouchListener buttonPauseTouchListener = new Button.OnTouchListener(){
@@ -363,7 +370,7 @@ public class StationListenActivityImg extends Activity {
                 if (msg.arg1 == -1)
                 	service.showError();
                 else if (msg.arg1 == 0)
-                	runDelayedHandler.postDelayed(service.runDelayed, 5000);
+                	runDelayedHandler.postDelayed(service.runDelayed, 1000);
                 else if (msg.arg1 == 5)
                 	service.pausePlaying();               	
                 else if (msg.arg1 == 10)

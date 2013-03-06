@@ -6,14 +6,18 @@ import java.util.ArrayList;
 
 //import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.PowerManager;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -21,6 +25,7 @@ public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
 	String listen_url;
 	Bundle recvBundle;
+	WifiLock wifiLock;
 	
 	private int playback_status = 0;	// 0 - initializing, -1 error, 3 - prepared, 5 paused, 10 playing 
 	
@@ -41,6 +46,11 @@ public class StationListenService extends Service {
 		 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		 mediaPlayer.setOnErrorListener(errListener);
 		 mediaPlayer.setOnPreparedListener(prepListener);
+		 
+		 mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+		 
+		 wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+		 wifiLock.acquire();
 	}
 	
 	@Override
@@ -54,16 +64,20 @@ public class StationListenService extends Service {
 		try {
 			mediaPlayer.setDataSource(listen_url);
 		} catch (IllegalArgumentException e) {
+			Log.e("DEBUG", "setDataSource IllegalArgumentException");
 			playback_status = -1;
 		} catch (IllegalStateException e) {
+			Log.e("DEBUG", "setDataSource IllegalStateException");
 			playback_status = -1;
 		} catch (IOException e) {
+			Log.e("DEBUG", "setDataSource IOException");
 			playback_status = -1;
 		}
 		
 		try {
 			mediaPlayer.prepareAsync();
 		} catch (IllegalStateException e) {
+			Log.e("DEBUG", "prepareAsync IllegalStateException");
 			playback_status = -1;
 		} 
 		
@@ -84,6 +98,7 @@ public class StationListenService extends Service {
 	public void onDestroy() {
 		mediaPlayer.stop();
 		mediaPlayer.release();
+		wifiLock.release();
 		super.onDestroy();
 	}
 	
@@ -97,6 +112,8 @@ public class StationListenService extends Service {
     	public boolean onError (MediaPlayer mp, int what, int extra) {
     			playback_status = -1;
     			sendMessageToUI(playback_status);
+    			Log.e("DEBUG", "onError: what: " + what);
+    			Log.e("DEBUG", "onError: extra: " + extra);
     		return true;
     	}
     };
