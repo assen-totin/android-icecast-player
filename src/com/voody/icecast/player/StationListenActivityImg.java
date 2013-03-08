@@ -35,6 +35,7 @@ public class StationListenActivityImg extends Activity {
 	Handler runTimerHandler = new Handler();
 	static Handler runDelayedHandler = new Handler();
 	
+	Boolean service_error = false;
 	Boolean keep_playing = false;
 	Boolean buttonPlayState = false;
 	Boolean buttonPauseState = false;
@@ -226,8 +227,9 @@ public class StationListenActivityImg extends Activity {
 	
 	Runnable runDelayed = new Runnable(){
         public void run() {
-    		// Query the service if it is running
-    		sendMessageToService(99);
+    		// Query the service if it is running, but only if have not received error message
+        	if (!service_error)
+        		sendMessageToService(99);
         }
     };
     
@@ -279,7 +281,8 @@ public class StationListenActivityImg extends Activity {
  		setButtonsState();
      }
     
-    void showError() {  	
+    void showError() {
+    	service_error = true;
     	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
     	toast.show();
     }
