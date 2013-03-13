@@ -46,6 +46,7 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
+		Log.e("DEBUG", "Called onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_url_img);
 		
@@ -94,12 +95,22 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	public void onRestart() {
+		Log.e("DEBUG", "Called onRestart");
 		// Just to make it non-zero
 		startTime = System.currentTimeMillis();
+		super.onRestart();
+	}
+	
+	@Override
+	public void onResume() {
+		Log.e("DEBUG", "Called onResume");
+		// Just to make it non-zero
+		super.onResume();
 	}
 	
 	@Override
 	public void onStart() {
+		Log.e("DEBUG", "Called onStart");
 		super.onStart();
 		
         // We have been launched, not resurrected for config (screen orientation) change
@@ -132,13 +143,21 @@ public class StationListenActivityImg extends Activity {
 	}
 	
 	@Override
+	public void onPause() {
+		Log.e("DEBUG", "Called onPause");
+		super.onPause();
+	}
+	
+	@Override
 	public void onStop() {
+		Log.e("DEBUG", "Called onStop");
 		doUnbindService();
 		super.onStop();
 	}
 	
 	@Override
 	public void onDestroy() {
+		Log.e("DEBUG", "Called onDestroy");
 		if (!keep_playing) {
 			//doUnbindService();
 			stopService(serviceIntent);

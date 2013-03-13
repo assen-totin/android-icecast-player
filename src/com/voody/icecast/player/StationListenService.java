@@ -66,6 +66,8 @@ public class StationListenService extends Service {
 		if (recvBundle != null)
 			listen_url = recvBundle.getString("listen_url");
 		
+		listen_url = "http://192.168.168.104:8000/stream.ogg";
+		
 		mediaPlayer.reset();
 
 		/*
@@ -85,7 +87,7 @@ public class StationListenService extends Service {
 		*/		
 		
 		try {
-			mediaPlayer.setDataSource(Uri.parse(listen_url).toString());
+			mediaPlayer.setDataSource(this, Uri.parse(listen_url));
 		} catch (IllegalArgumentException e) {
 			Log.e("DEBUG", "setDataSource IllegalArgumentException");
 			playback_status = -1;
