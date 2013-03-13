@@ -1,7 +1,10 @@
 package com.voody.icecast.player;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 //import android.app.NotificationManager;
@@ -10,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Bundle;
@@ -26,6 +30,9 @@ public class StationListenService extends Service {
 	String listen_url;
 	Bundle recvBundle;
 	WifiLock wifiLock;
+
+	//URL listenURL;
+	//InputStream IS;
 	
 	private int playback_status = 0;	// 0 - initializing, -1 error, 3 - prepared, 5 paused, 10 playing 
 	
@@ -60,9 +67,25 @@ public class StationListenService extends Service {
 			listen_url = recvBundle.getString("listen_url");
 		
 		mediaPlayer.reset();
+
+		/*
+		try {
+			listenURL = new URL(listen_url);
+		} catch (MalformedURLException e1) {
+			Log.e("DEBUG", "URL MalformedURLException");
+			playback_status = -1;
+		}
 		
 		try {
-			mediaPlayer.setDataSource(listen_url);
+			IS = listenURL.openStream();
+		} catch (IOException e1) {
+			Log.e("DEBUG", "Stream IOException");
+			playback_status = -1;
+		}
+		*/		
+		
+		try {
+			mediaPlayer.setDataSource(Uri.parse(listen_url).toString());
 		} catch (IllegalArgumentException e) {
 			Log.e("DEBUG", "setDataSource IllegalArgumentException");
 			playback_status = -1;
