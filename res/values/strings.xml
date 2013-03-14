@@ -30,4 +30,5 @@
     <string name="manually_exists">Station already exists in Favourites.</string>
     <string name="url_hint">http://&#8230;</string>
     <string name="unable_to_load_station">Unable to play this station.</string>
+    <string name="loading_station">Loading station&#8230;</string>
 </resources>

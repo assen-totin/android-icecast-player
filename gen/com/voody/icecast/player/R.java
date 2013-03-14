@@ -74,6 +74,7 @@ public final class R {
         public static final int cd_stop=0x7f050015;
         public static final int empty=0x7f05000d;
         public static final int listen_url=0x7f05000f;
+        public static final int loading_station=0x7f05001e;
         public static final int manually_add=0x7f050019;
         public static final int manually_added=0x7f05001a;
         public static final int manually_exists=0x7f05001b;

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -22,23 +23,29 @@ import android.widget.Toast;
 import android.content.Context;
 
 public class StationListenActivityImg extends Activity {
-	ImageView buttonPause, buttonPlay, buttonFavourite, buttonHome;
 	TextView textViewServerName, textViewListenUrl, textViewBitrate, textViewTimer;
-	String server_name, listen_url, bitrate;
-	Boolean is_favourite = false;
+	ImageView buttonPause, buttonPlay, buttonFavourite, buttonHome;
+	Boolean buttonPlayState = false;
+	Boolean buttonPauseState = false;
+	
 	Bundle recvBundle, sendBundle;
 	Intent serviceIntent;
+	private SharedPreferences mPrefs;
+
+	String server_name, listen_url, bitrate;
+	Boolean is_favourite = false;
 	
 	SQLiteHelper dbHelper = new SQLiteHelper(StationListenActivityImg.this);
 	
+	SharedPreferences.Editor ed;
+	
 	long startTime = 0;
 	Handler runTimerHandler = new Handler();
-	static Handler runDelayedHandler = new Handler();
+	Handler runDelayedHandler = new Handler();
 	
 	Boolean service_error = false;
 	Boolean keep_playing = false;
-	Boolean buttonPlayState = false;
-	Boolean buttonPauseState = false;
+	Boolean first_run = true;
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
@@ -51,15 +58,19 @@ public class StationListenActivityImg extends Activity {
 		setContentView(R.layout.listen_url_img);
 		
 		recvBundle = this.getIntent().getExtras();
-		if (recvBundle == null)
+		if (recvBundle == null) {
+			Log.e("DEBUG", "onCreate resurrected");
 			recvBundle = savedInstanceState;
+		}
 		
     	server_name = recvBundle.getString("server_name");
     	listen_url = recvBundle.getString("listen_url");
     	bitrate = recvBundle.getString("bitrate");
-    	startTime = recvBundle.getLong("startTime");
+    	//startTime = recvBundle.getLong("startTime");
 		 	
 		dbHelper.insertIntoRecent(listen_url);
+		
+		keep_playing = recvBundle.getBoolean("keep_playing");
 
         buttonPause = (ImageView)findViewById(R.id.stop);
         buttonPause.setOnTouchListener(buttonPauseTouchListener);
@@ -96,16 +107,7 @@ public class StationListenActivityImg extends Activity {
 	@Override
 	public void onRestart() {
 		Log.e("DEBUG", "Called onRestart");
-		// Just to make it non-zero
-		startTime = System.currentTimeMillis();
 		super.onRestart();
-	}
-	
-	@Override
-	public void onResume() {
-		Log.e("DEBUG", "Called onResume");
-		// Just to make it non-zero
-		super.onResume();
 	}
 	
 	@Override
@@ -113,8 +115,12 @@ public class StationListenActivityImg extends Activity {
 		Log.e("DEBUG", "Called onStart");
 		super.onStart();
 		
+		//mPrefs = getPreferences(0);
+		//keep_playing = mPrefs.getBoolean("keep_playing", false);
+		
         // We have been launched, not resurrected for config (screen orientation) change
-        if (startTime == 0) {
+        if (first_run && !keep_playing) {
+        	Log.e("DEBUG", "onStart first_run && !keep_playing");
         	// Start our service
         	sendBundle = new Bundle();
         	sendBundle.putString("listen_url", listen_url);
@@ -124,28 +130,54 @@ public class StationListenActivityImg extends Activity {
         	startService(serviceIntent);
         	// We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
         	doBindService();
-        	
-			// we have just been launched
-			startTime = System.currentTimeMillis();
-			
+        			
 			// Schedule a query to the service - 1 second from now (messaging is slow to wake up)
 			runDelayedHandler.postDelayed(runDelayed, 1000);
         }
+/*
         else {
         	// We have been resurrected - re-launch timer update
         	runTimerHandler.postDelayed(runTimer, 100);        	
         }
+*/		
+        //setButtonsState();      
+	}
+	
+	@Override
+	public void onResume() {
+		Log.e("DEBUG", "Called onResume");
+		super.onResume();
 		
-        setButtonsState();
+		if (!first_run) {
+			Log.e("DEBUG", "onResume !first_run");
+			mPrefs = getPreferences(0);
+			startTime = mPrefs.getLong("startTime", 0);
+			buttonPlayState = mPrefs.getBoolean("buttonPlayState", false);
+			buttonPauseState = mPrefs.getBoolean("buttonPauseState", false);
+		}
 		
+		setButtonsState();
+        
+        runTimerHandler.postDelayed(runTimer, 100); 
+        
+        first_run = false;
+        
         // We need this here despite the default because of task-switching
-        keep_playing = false;       
+        keep_playing = false;
+		//ed = mPrefs.edit();
+		//ed.putBoolean("keep_playing", keep_playing);
+		//ed.commit();
 	}
 	
 	@Override
 	public void onPause() {
 		Log.e("DEBUG", "Called onPause");
 		super.onPause();
+        ed = mPrefs.edit();
+        ed.putLong("startTime", startTime);
+        ed.putBoolean("buttonPlayState", buttonPlayState);
+        ed.putBoolean("buttonPauseState", buttonPauseState);
+        ed.commit();
 	}
 	
 	@Override
@@ -159,7 +191,7 @@ public class StationListenActivityImg extends Activity {
 	public void onDestroy() {
 		Log.e("DEBUG", "Called onDestroy");
 		if (!keep_playing) {
-			//doUnbindService();
+			Log.e("DEBUG", "onDestroy !keep_playing");
 			stopService(serviceIntent);
 		}
 		dbHelper.close();
@@ -168,22 +200,34 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		Log.e("DEBUG", "Called savedInstanceState");
+		
+		keep_playing = true;
+		
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
-		savedInstanceState.putLong("startTime", startTime);
+		//savedInstanceState.putLong("startTime", startTime);
 		savedInstanceState.putBoolean("buttonPlayState", buttonPlayState);
 		savedInstanceState.putBoolean("buttonPauseState", buttonPauseState);
-		// set the keep_playing variable so that the onDestroy method does not stop the player service
-		keep_playing = true;
+		savedInstanceState.putBoolean("keep_playing", keep_playing);
+		
+		// Set the keep_playing variable so that the onDestroy method does not stop the player service
+		// We'll also use it to detect resurrection after screen rotation
+		//keep_playing = true;
+		//ed = mPrefs.edit();
+		//ed.putBoolean("keep_playing", keep_playing);
+		//ed.commit();
 	}
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    	server_name = savedInstanceState.getString("server_name");
+		Log.e("DEBUG", "Called restoreInstanceState");
+    	
+		server_name = savedInstanceState.getString("server_name");
     	listen_url = savedInstanceState.getString("listen_url");
     	bitrate = savedInstanceState.getString("bitrate");
-    	startTime = savedInstanceState.getLong("startTime");
+    	//startTime = savedInstanceState.getLong("startTime");
         buttonPauseState = savedInstanceState.getBoolean("buttonPauseState");
         buttonPlayState = savedInstanceState.getBoolean("buttonPlayState");
         setButtonsState();
@@ -246,9 +290,12 @@ public class StationListenActivityImg extends Activity {
 	
 	Runnable runDelayed = new Runnable(){
         public void run() {
+        	Log.e("DEBUG", "Called runDelayed");
     		// Query the service if it is running, but only if have not received error message
-        	if (!service_error)
+        	if (!service_error) {
+        		Log.e("DEBUG", "runDelayed !service_error");
         		sendMessageToService(99);
+        	}
         }
     };
     
@@ -288,6 +335,13 @@ public class StationListenActivityImg extends Activity {
     }
     
     void startPlaying() {
+    	Log.e("DEBUG", "Called startPlaying");
+    	if (startTime == 0) {
+    		// we have just been launched
+    		Log.e("DEBUG", "startPlaying startTime == 0");
+    		startTime = System.currentTimeMillis();
+    	}
+    	
     	runTimerHandler.postDelayed(runTimer, 100);
 		buttonPauseState = true;
 		buttonPlayState = false;
@@ -305,7 +359,17 @@ public class StationListenActivityImg extends Activity {
     	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
     	toast.show();
     }
-        
+
+    void showLoading() {
+    	Log.e("DEBUG", "Called showLoading");
+    	if (!service_error) {
+    		Log.e("DEBUG", "showLoading !service_error");
+    		runDelayedHandler.postDelayed(runDelayed, 5000);
+        	Toast toast1 = Toast.makeText(this, getString(R.string.loading_station), Toast.LENGTH_SHORT);
+        	toast1.show();
+    	}
+    }
+    
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = new Messenger(service);
@@ -334,7 +398,7 @@ public class StationListenActivityImg extends Activity {
     
     void doBindService() {
     	if (!mIsBound) {
-    		// Note: this is non-blocking and returns immediately, even if mConnection is not ready yet and mService is still NULL
+    		// This is non-blocking and returns immediately, even if mConnection is not ready yet and mService is still NULL
     		bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
     		if (mService != null) {
     			try {
@@ -352,7 +416,7 @@ public class StationListenActivityImg extends Activity {
     
     void doUnbindService() {
         if (mIsBound) {
-            // If we have received the service, and hence registered with it, then now is the time to unregister.
+            // If we have received the service, and hence registered with it, then unregister
             if (mService != null) {
                 try {
                     Message msg = Message.obtain(null, StationListenService.MSG_UNREGISTER_CLIENT);
@@ -380,19 +444,11 @@ public class StationListenActivityImg extends Activity {
         public void handleMessage(Message msg) {
         	StationListenActivityImg service = mService.get();   
             switch (msg.what) {
-            /*
-            case MSG_REGISTER_CLIENT:
-                service.mClients.add(msg.replyTo);
-                break;
-            case MSG_UNREGISTER_CLIENT:
-                service.mClients.remove(msg.replyTo);
-                break;
-            */
             case StationListenService.MSG_SET_INT_VALUE:
                 if (msg.arg1 == -1)
                 	service.showError();
                 else if (msg.arg1 == 0)
-                	runDelayedHandler.postDelayed(service.runDelayed, 1000);
+                	service.showLoading();
                 else if (msg.arg1 == 5)
                 	service.pausePlaying();               	
                 else if (msg.arg1 == 10)

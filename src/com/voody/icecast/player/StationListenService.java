@@ -34,7 +34,7 @@ public class StationListenService extends Service {
 	//URL listenURL;
 	//InputStream IS;
 	
-	private int playback_status = 0;	// 0 - initializing, -1 error, 3 - prepared, 5 paused, 10 playing 
+	private int playback_status = 0;	// 0 - initializing, 3 prepared, -1 error, 5 paused, 10 playing 
 	
 	long startTime;
 	Handler timer = new Handler();
@@ -137,8 +137,6 @@ public class StationListenService extends Service {
     	public boolean onError (MediaPlayer mp, int what, int extra) {
     			playback_status = -1;
     			sendMessageToUI(playback_status);
-    			Log.e("DEBUG", "onError: what: " + what);
-    			Log.e("DEBUG", "onError: extra: " + extra);
     		return true;
     	}
     };
@@ -174,15 +172,17 @@ public class StationListenService extends Service {
             case MSG_SET_INT_VALUE:
             	if (msg.arg1 == 10) {
             		// Start playback
-                	service.mediaPlayer.start();
-                	if (service.playback_status >= 0)
+                	if (service.playback_status >= 5) {
+                		service.mediaPlayer.start();
                 		service.playback_status = 10;
+                	}
             	}
                 else if (msg.arg1 == 5) {
                 	// Pause playback
-                	service.mediaPlayer.pause();
-                	if (service.playback_status >= 0)
+                	if (service.playback_status >= 5) {
+                		service.mediaPlayer.pause();
                 		service.playback_status = 5;
+                	}
                 }
             	service.sendMessageToUI(service.playback_status);
                 break;

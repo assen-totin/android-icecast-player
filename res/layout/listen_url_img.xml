@@ -110,9 +110,9 @@
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_small"
         android:contentDescription="@string/cd_stop"
-        android:src="@drawable/b2_on" />
+        android:padding="@dimen/padding_small"
+        android:src="@drawable/b2_off" />
 
     </LinearLayout>
 
