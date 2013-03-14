@@ -30,6 +30,7 @@ public class StationListenActivityImg extends Activity {
 	
 	Bundle recvBundle, sendBundle;
 	Intent serviceIntent;
+	ComponentName service_component_name;
 	private SharedPreferences mPrefs;
 
 	String server_name, listen_url, bitrate;
@@ -66,6 +67,7 @@ public class StationListenActivityImg extends Activity {
 		else {
 			Log.e("DEBUG", "onCreate savedInstanceState != null");
 			recvBundle = savedInstanceState;
+			service_component_name = recvBundle.getParcelable("service_component_name");
 		}
 			
     	server_name = recvBundle.getString("server_name");
@@ -128,7 +130,7 @@ public class StationListenActivityImg extends Activity {
         	serviceIntent = new Intent(this, StationListenService.class);
         	serviceIntent.putExtras(sendBundle);
         	// Start the service - the playback will begin as soon as it is ready
-        	startService(serviceIntent);
+        	service_component_name = startService(serviceIntent);
         	// We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
         	doBindService();
         			
@@ -204,7 +206,13 @@ public class StationListenActivityImg extends Activity {
 		Log.e("DEBUG", "Called onDestroy");
 		if (!keep_playing) {
 			Log.e("DEBUG", "onDestroy !keep_playing");
-			stopService(serviceIntent);
+			Class<?> serviceClass = null;
+			try {
+				serviceClass = Class.forName(service_component_name.getClassName());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			stopService(new Intent(this, serviceClass));
 		}
 		super.onDestroy();
 	}
@@ -222,6 +230,7 @@ public class StationListenActivityImg extends Activity {
 		savedInstanceState.putBoolean("buttonPlayState", buttonPlayState);
 		savedInstanceState.putBoolean("buttonPauseState", buttonPauseState);
 		savedInstanceState.putBoolean("keep_playing", keep_playing);
+		savedInstanceState.putParcelable("service_component_name", service_component_name);
 		
 		// Set the keep_playing variable so that the onDestroy method does not stop the player service
 		// We'll also use it to detect resurrection after screen rotation

@@ -150,7 +150,7 @@ public class StationListenService extends Service {
 			sendMessageToUI(playback_status);
 		}
 	};
-    
+	
     // This is a bit cumbersome, but having the handler 'static' avoids potential
     // memory leak when a message is put in a queue when the client gone. 
     static class IncomingHandler extends Handler { // Handler of incoming messages from clients.
