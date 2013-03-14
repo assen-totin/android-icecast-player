@@ -66,7 +66,7 @@ public class StationListenService extends Service {
 		if (recvBundle != null)
 			listen_url = recvBundle.getString("listen_url");
 		
-		listen_url = "http://192.168.168.104:8000/stream.ogg";
+		//listen_url = "http://192.168.168.104:8000/stream.ogg";
 		
 		mediaPlayer.reset();
 
@@ -121,6 +121,7 @@ public class StationListenService extends Service {
 	
 	@Override
 	public void onDestroy() {
+		Log.e("DEBUG", "SERVICE Called onDestroy");
 		mediaPlayer.stop();
 		mediaPlayer.release();
 		wifiLock.release();

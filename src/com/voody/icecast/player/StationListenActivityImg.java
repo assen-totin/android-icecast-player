@@ -35,7 +35,8 @@ public class StationListenActivityImg extends Activity {
 	String server_name, listen_url, bitrate;
 	Boolean is_favourite = false;
 	
-	SQLiteHelper dbHelper = new SQLiteHelper(StationListenActivityImg.this);
+	SQLiteHelper dbHelper;
+	//= new SQLiteHelper(StationListenActivityImg.this);
 	
 	SharedPreferences.Editor ed;
 	
@@ -43,7 +44,7 @@ public class StationListenActivityImg extends Activity {
 	Handler runTimerHandler = new Handler();
 	Handler runDelayedHandler = new Handler();
 	
-	Boolean service_error = false;
+	int service_status = 0;
 	Boolean keep_playing = false;
 	Boolean first_run = true;
     
@@ -57,22 +58,22 @@ public class StationListenActivityImg extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_url_img);
 		
-		recvBundle = this.getIntent().getExtras();
-		if (recvBundle == null) {
-			Log.e("DEBUG", "onCreate resurrected");
+		//Prefer savedInstanceState to original intent bundle
+		if (savedInstanceState == null) {
+			Log.e("DEBUG", "onCreate savedInstanceState == null");
+			recvBundle = this.getIntent().getExtras();
+		}
+		else {
+			Log.e("DEBUG", "onCreate savedInstanceState != null");
 			recvBundle = savedInstanceState;
 		}
-		
+			
     	server_name = recvBundle.getString("server_name");
     	listen_url = recvBundle.getString("listen_url");
     	bitrate = recvBundle.getString("bitrate");
     	//startTime = recvBundle.getLong("startTime");
-		 	
-		dbHelper.insertIntoRecent(listen_url);
-		
-		keep_playing = recvBundle.getBoolean("keep_playing");
-
-        buttonPause = (ImageView)findViewById(R.id.stop);
+		 		
+		buttonPause = (ImageView)findViewById(R.id.stop);
         buttonPause.setOnTouchListener(buttonPauseTouchListener);
         buttonPauseState = recvBundle.getBoolean("buttonPauseState");
 		
@@ -97,10 +98,10 @@ public class StationListenActivityImg extends Activity {
         
         textViewTimer = (TextView) findViewById(R.id.textView_timer_2);
         
-        if (dbHelper.isFavourite(listen_url)) {
-        	is_favourite = true;
-        	buttonFavourite.setImageResource(R.drawable.b3_del);
-        	buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
+        keep_playing = recvBundle.getBoolean("keep_playing");
+        if (keep_playing) {
+        	setButtonsState();
+        	first_run = false;
         }
 	}
 	
@@ -119,7 +120,7 @@ public class StationListenActivityImg extends Activity {
 		//keep_playing = mPrefs.getBoolean("keep_playing", false);
 		
         // We have been launched, not resurrected for config (screen orientation) change
-        if (first_run && !keep_playing) {
+        if (first_run) {
         	Log.e("DEBUG", "onStart first_run && !keep_playing");
         	// Start our service
         	sendBundle = new Bundle();
@@ -148,20 +149,30 @@ public class StationListenActivityImg extends Activity {
 		Log.e("DEBUG", "Called onResume");
 		super.onResume();
 		
+		dbHelper = new SQLiteHelper(StationListenActivityImg.this);
+        if (dbHelper.isFavourite(listen_url)) {
+        	is_favourite = true;
+        	buttonFavourite.setImageResource(R.drawable.b3_del);
+        	buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
+        }
+		
+		mPrefs = getPreferences(0);
 		if (!first_run) {
 			Log.e("DEBUG", "onResume !first_run");
-			mPrefs = getPreferences(0);
-			startTime = mPrefs.getLong("startTime", 0);
 			buttonPlayState = mPrefs.getBoolean("buttonPlayState", false);
 			buttonPauseState = mPrefs.getBoolean("buttonPauseState", false);
+			startTime = mPrefs.getLong("startTime", System.currentTimeMillis());
+			runTimerHandler.postDelayed(runTimer, 100);
+		}
+		else {
+			first_run = false;
+			dbHelper.insertIntoRecent(listen_url);
 		}
 		
 		setButtonsState();
         
-        runTimerHandler.postDelayed(runTimer, 100); 
-        
-        first_run = false;
-        
+        //runTimerHandler.postDelayed(runTimer, 100); 
+               
         // We need this here despite the default because of task-switching
         keep_playing = false;
 		//ed = mPrefs.edit();
@@ -184,6 +195,7 @@ public class StationListenActivityImg extends Activity {
 	public void onStop() {
 		Log.e("DEBUG", "Called onStop");
 		doUnbindService();
+		dbHelper.close();
 		super.onStop();
 	}
 	
@@ -194,7 +206,6 @@ public class StationListenActivityImg extends Activity {
 			Log.e("DEBUG", "onDestroy !keep_playing");
 			stopService(serviceIntent);
 		}
-		dbHelper.close();
 		super.onDestroy();
 	}
 	
@@ -224,6 +235,7 @@ public class StationListenActivityImg extends Activity {
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		Log.e("DEBUG", "Called restoreInstanceState");
     	
+		/*
 		server_name = savedInstanceState.getString("server_name");
     	listen_url = savedInstanceState.getString("listen_url");
     	bitrate = savedInstanceState.getString("bitrate");
@@ -231,6 +243,7 @@ public class StationListenActivityImg extends Activity {
         buttonPauseState = savedInstanceState.getBoolean("buttonPauseState");
         buttonPlayState = savedInstanceState.getBoolean("buttonPlayState");
         setButtonsState();
+        */
 	}
 	
 	Button.OnTouchListener buttonPauseTouchListener = new Button.OnTouchListener(){
@@ -292,8 +305,8 @@ public class StationListenActivityImg extends Activity {
         public void run() {
         	Log.e("DEBUG", "Called runDelayed");
     		// Query the service if it is running, but only if have not received error message
-        	if (!service_error) {
-        		Log.e("DEBUG", "runDelayed !service_error");
+        	if (service_status >=0) {
+        		Log.e("DEBUG", "runDelayed service_status >= 0");
         		sendMessageToService(99);
         	}
         }
@@ -336,6 +349,11 @@ public class StationListenActivityImg extends Activity {
     
     void startPlaying() {
     	Log.e("DEBUG", "Called startPlaying");
+    	
+    	if (service_status == 10)
+    		return;
+    	
+    	service_status = 10;
     	if (startTime == 0) {
     		// we have just been launched
     		Log.e("DEBUG", "startPlaying startTime == 0");
@@ -349,25 +367,27 @@ public class StationListenActivityImg extends Activity {
     }
 
     void pausePlaying() {
+    	service_status = 5;
  		buttonPauseState = false;
  		buttonPlayState = true;
  		setButtonsState();
      }
     
     void showError() {
-    	service_error = true;
+    	if (service_status == -1)
+    		return;
+    	
+    	service_status = -1;
     	Toast toast = Toast.makeText(this, getString(R.string.unable_to_load_station), Toast.LENGTH_SHORT);
     	toast.show();
     }
 
     void showLoading() {
     	Log.e("DEBUG", "Called showLoading");
-    	if (!service_error) {
-    		Log.e("DEBUG", "showLoading !service_error");
-    		runDelayedHandler.postDelayed(runDelayed, 5000);
-        	Toast toast1 = Toast.makeText(this, getString(R.string.loading_station), Toast.LENGTH_SHORT);
-        	toast1.show();
-    	}
+    	service_status = 0;
+    	runDelayedHandler.postDelayed(runDelayed, 5000);
+        Toast toast1 = Toast.makeText(this, getString(R.string.loading_station), Toast.LENGTH_SHORT);
+        toast1.show();
     }
     
     private ServiceConnection mConnection = new ServiceConnection() {
