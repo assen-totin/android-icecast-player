@@ -37,9 +37,10 @@ public class StationListenActivityImg extends Activity {
 	Boolean is_favourite = false;
 	
 	SQLiteHelper dbHelper;
-	//= new SQLiteHelper(StationListenActivityImg.this);
 	
 	SharedPreferences.Editor ed;
+	
+	Class<?> serviceClass = null;
 	
 	long startTime = 0;
 	Handler runTimerHandler = new Handler();
@@ -102,6 +103,12 @@ public class StationListenActivityImg extends Activity {
         
         keep_playing = recvBundle.getBoolean("keep_playing");
         if (keep_playing) {
+        	try {
+				serviceClass = Class.forName(service_component_name.getClassName());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+        	
         	setButtonsState();
         	first_run = false;
         }
@@ -129,14 +136,24 @@ public class StationListenActivityImg extends Activity {
         	sendBundle.putString("listen_url", listen_url);
         	serviceIntent = new Intent(this, StationListenService.class);
         	serviceIntent.putExtras(sendBundle);
+
         	// Start the service - the playback will begin as soon as it is ready
-        	service_component_name = startService(serviceIntent);
+        	service_component_name = startService(serviceIntent);     	
+        	try {
+				serviceClass = Class.forName(service_component_name.getClassName());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+        	
         	// We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
-        	doBindService();
+        	//doBindService();
         			
 			// Schedule a query to the service - 1 second from now (messaging is slow to wake up)
 			runDelayedHandler.postDelayed(runDelayed, 1000);
-        }
+        } 
+        
+        //We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
+        doBindService();
 /*
         else {
         	// We have been resurrected - re-launch timer update
@@ -206,13 +223,9 @@ public class StationListenActivityImg extends Activity {
 		Log.e("DEBUG", "Called onDestroy");
 		if (!keep_playing) {
 			Log.e("DEBUG", "onDestroy !keep_playing");
-			Class<?> serviceClass = null;
-			try {
-				serviceClass = Class.forName(service_component_name.getClassName());
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+						
 			stopService(new Intent(this, serviceClass));
+			//sendMessageToService(666);
 		}
 		super.onDestroy();
 	}
@@ -428,7 +441,7 @@ public class StationListenActivityImg extends Activity {
     void doBindService() {
     	if (!mIsBound) {
     		// This is non-blocking and returns immediately, even if mConnection is not ready yet and mService is still NULL
-    		bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+    		bindService(new Intent(this, serviceClass), mConnection, Context.BIND_AUTO_CREATE);
     		if (mService != null) {
     			try {
     				Message msg = Message.obtain(null, StationListenService.MSG_REGISTER_CLIENT);

@@ -66,7 +66,7 @@ public class StationListenService extends Service {
 		if (recvBundle != null)
 			listen_url = recvBundle.getString("listen_url");
 		
-		//listen_url = "http://192.168.168.104:8000/stream.ogg";
+		listen_url = "http://192.168.168.104:8000/stream.ogg";
 		
 		mediaPlayer.reset();
 
@@ -184,6 +184,10 @@ public class StationListenService extends Service {
                 		service.mediaPlayer.pause();
                 		service.playback_status = 5;
                 	}
+                }
+                else if (msg.arg1 == 666) {
+                	// Pause playback
+                	service.stopSelf();
                 }
             	service.sendMessageToUI(service.playback_status);
                 break;
