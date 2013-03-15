@@ -69,9 +69,11 @@ public class StationListenService extends Service {
 		String extension = listen_url.substring(listen_url.lastIndexOf('.'));
 		String mime_type = MimeTypeMap.getFileExtensionFromUrl(extension);
 		if (mime_type == null) {
-			listen_url += "/";
-			Log.e("DEBUG", "SERVICE extension retrieved " + extension);
-			Log.e("DEBUG", "SERVICE added slash to URL, new is " + listen_url);
+			Log.e("DEBUG", "SERVICE unknown extension retrieved " + extension);
+			if (listen_url.substring(listen_url.length() - 1) != "/") {
+				Log.e("DEBUG", "SERVICE added slash to URL, new is " + listen_url);
+				listen_url += "/";
+			}
 		}
 		
 		mediaPlayer.reset();
