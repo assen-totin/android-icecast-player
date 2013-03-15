@@ -59,7 +59,24 @@ public class StationListenActivityImg extends Activity {
 		Log.e("DEBUG", "Called onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_url_img);
+
+		buttonPause = (ImageView)findViewById(R.id.stop);
+        buttonPause.setOnTouchListener(buttonPauseTouchListener);
+
+        buttonPlay = (ImageView)findViewById(R.id.play);
+        buttonPlay.setOnTouchListener(buttonPlayTouchListener);
+        
+        buttonFavourite = (ImageView)findViewById(R.id.favourite);
+        buttonFavourite.setOnTouchListener(buttonFavouriteTouchListener);
 		
+        buttonHome = (ImageView)findViewById(R.id.go_home);
+        buttonHome.setOnTouchListener(buttonHomeTouchListener);
+
+        textViewServerName = (TextView) findViewById(R.id.textView_server_name_2);
+        textViewListenUrl = (TextView) findViewById(R.id.textView_listen_url_2);
+        textViewBitrate = (TextView) findViewById(R.id.textView_bitrate_2);
+        textViewTimer = (TextView) findViewById(R.id.textView_timer_2);
+        
 		//Prefer savedInstanceState to original intent bundle
 		if (savedInstanceState == null) {
 			Log.e("DEBUG", "onCreate savedInstanceState == null");
@@ -69,40 +86,22 @@ public class StationListenActivityImg extends Activity {
 			Log.e("DEBUG", "onCreate savedInstanceState != null");
 			recvBundle = savedInstanceState;
 			service_component_name = recvBundle.getParcelable("service_component_name");
+			buttonPauseState = recvBundle.getBoolean("buttonPauseState");	
+	        buttonPlayState = recvBundle.getBoolean("buttonPlayState");
 		}
 			
     	server_name = recvBundle.getString("server_name");
+    	textViewServerName.setText(server_name);
+    	
     	listen_url = recvBundle.getString("listen_url");
-    	bitrate = recvBundle.getString("bitrate");
-    	//startTime = recvBundle.getLong("startTime");
-		 		
-		buttonPause = (ImageView)findViewById(R.id.stop);
-        buttonPause.setOnTouchListener(buttonPauseTouchListener);
-        buttonPauseState = recvBundle.getBoolean("buttonPauseState");
-		
-        buttonPlay = (ImageView)findViewById(R.id.play);
-        buttonPlay.setOnTouchListener(buttonPlayTouchListener);
-        buttonPlayState = recvBundle.getBoolean("buttonPlayState");
-        
-        buttonFavourite = (ImageView)findViewById(R.id.favourite);
-        buttonFavourite.setOnTouchListener(buttonFavouriteTouchListener);
-		
-        buttonHome = (ImageView)findViewById(R.id.go_home);
-        buttonHome.setOnTouchListener(buttonHomeTouchListener);
-        
-        textViewServerName = (TextView) findViewById(R.id.textView_server_name_2);
-        textViewServerName.setText(server_name);
-        
-        textViewListenUrl = (TextView) findViewById(R.id.textView_listen_url_2);
-        textViewListenUrl.setText(listen_url);
-        
-        textViewBitrate = (TextView) findViewById(R.id.textView_bitrate_2);
+    	textViewListenUrl.setText(listen_url);
+    	
+    	bitrate = recvBundle.getString("bitrate");         
         textViewBitrate.setText(bitrate + " kbps");
-        
-        textViewTimer = (TextView) findViewById(R.id.textView_timer_2);
         
         keep_playing = recvBundle.getBoolean("keep_playing");
         if (keep_playing) {
+        	Log.e("DEBUG", "onCreate keep_playing");
         	try {
 				serviceClass = Class.forName(service_component_name.getClassName());
 			} catch (ClassNotFoundException e) {
@@ -110,6 +109,7 @@ public class StationListenActivityImg extends Activity {
 			}
         	
         	setButtonsState();
+        	
         	first_run = false;
         }
 	}
@@ -124,43 +124,31 @@ public class StationListenActivityImg extends Activity {
 	public void onStart() {
 		Log.e("DEBUG", "Called onStart");
 		super.onStart();
-		
-		//mPrefs = getPreferences(0);
-		//keep_playing = mPrefs.getBoolean("keep_playing", false);
-		
-        // We have been launched, not resurrected for config (screen orientation) change
+				
         if (first_run) {
+        	// We have been launched, not resurrected for config (screen orientation) change
         	Log.e("DEBUG", "onStart first_run && !keep_playing");
-        	// Start our service
+        	 
+        	//Start our service
         	sendBundle = new Bundle();
         	sendBundle.putString("listen_url", listen_url);
         	serviceIntent = new Intent(this, StationListenService.class);
         	serviceIntent.putExtras(sendBundle);
 
-        	// Start the service - the playback will begin as soon as it is ready
+        	// Start the service (the playback will begin as soon as it is ready) and save its ComponenName 
         	service_component_name = startService(serviceIntent);     	
         	try {
 				serviceClass = Class.forName(service_component_name.getClassName());
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-        	
-        	// We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
-        	//doBindService();
-        			
+        	       			
 			// Schedule a query to the service - 1 second from now (messaging is slow to wake up)
 			runDelayedHandler.postDelayed(runDelayed, 1000);
         } 
         
         //We only need this here to wake-up the messenger service (connection is asynchronous and non-blocking)
-        doBindService();
-/*
-        else {
-        	// We have been resurrected - re-launch timer update
-        	runTimerHandler.postDelayed(runTimer, 100);        	
-        }
-*/		
-        //setButtonsState();      
+        doBindService();   
 	}
 	
 	@Override
@@ -189,14 +177,9 @@ public class StationListenActivityImg extends Activity {
 		}
 		
 		setButtonsState();
-        
-        //runTimerHandler.postDelayed(runTimer, 100); 
                
         // We need this here despite the default because of task-switching
         keep_playing = false;
-		//ed = mPrefs.edit();
-		//ed.putBoolean("keep_playing", keep_playing);
-		//ed.commit();
 	}
 	
 	@Override
@@ -225,7 +208,6 @@ public class StationListenActivityImg extends Activity {
 			Log.e("DEBUG", "onDestroy !keep_playing");
 						
 			stopService(new Intent(this, serviceClass));
-			//sendMessageToService(666);
 		}
 		super.onDestroy();
 	}
@@ -233,39 +215,21 @@ public class StationListenActivityImg extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		Log.e("DEBUG", "Called savedInstanceState");
-		
-		keep_playing = true;
-		
+			
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
-		//savedInstanceState.putLong("startTime", startTime);
 		savedInstanceState.putBoolean("buttonPlayState", buttonPlayState);
 		savedInstanceState.putBoolean("buttonPauseState", buttonPauseState);
 		savedInstanceState.putBoolean("keep_playing", keep_playing);
 		savedInstanceState.putParcelable("service_component_name", service_component_name);
 		
-		// Set the keep_playing variable so that the onDestroy method does not stop the player service
-		// We'll also use it to detect resurrection after screen rotation
-		//keep_playing = true;
-		//ed = mPrefs.edit();
-		//ed.putBoolean("keep_playing", keep_playing);
-		//ed.commit();
+		keep_playing = true;
 	}
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		Log.e("DEBUG", "Called restoreInstanceState");
-    	
-		/*
-		server_name = savedInstanceState.getString("server_name");
-    	listen_url = savedInstanceState.getString("listen_url");
-    	bitrate = savedInstanceState.getString("bitrate");
-    	//startTime = savedInstanceState.getLong("startTime");
-        buttonPauseState = savedInstanceState.getBoolean("buttonPauseState");
-        buttonPlayState = savedInstanceState.getBoolean("buttonPlayState");
-        setButtonsState();
-        */
 	}
 	
 	Button.OnTouchListener buttonPauseTouchListener = new Button.OnTouchListener(){

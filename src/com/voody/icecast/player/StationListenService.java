@@ -30,9 +30,6 @@ public class StationListenService extends Service {
 	String listen_url;
 	Bundle recvBundle;
 	WifiLock wifiLock;
-
-	//URL listenURL;
-	//InputStream IS;
 	
 	private int playback_status = 0;	// 0 - initializing, 3 prepared, -1 error, 5 paused, 10 playing 
 	
@@ -43,7 +40,6 @@ public class StationListenService extends Service {
     static final int MSG_UNREGISTER_CLIENT = 2;
     static final int MSG_SET_INT_VALUE = 3;
     static final int MSG_SET_STRING_VALUE = 4;
-    //private NotificationManager nm;
     ArrayList<Messenger> mClients = new ArrayList<Messenger>(); // Keeps track of all current registered clients.
     final Messenger mMessenger = new Messenger(new IncomingHandler(this)); // Target we publish for clients to send messages to IncomingHandler.
     
@@ -69,22 +65,6 @@ public class StationListenService extends Service {
 		listen_url = "http://192.168.168.104:8000/stream.ogg";
 		
 		mediaPlayer.reset();
-
-		/*
-		try {
-			listenURL = new URL(listen_url);
-		} catch (MalformedURLException e1) {
-			Log.e("DEBUG", "URL MalformedURLException");
-			playback_status = -1;
-		}
-		
-		try {
-			IS = listenURL.openStream();
-		} catch (IOException e1) {
-			Log.e("DEBUG", "Stream IOException");
-			playback_status = -1;
-		}
-		*/		
 		
 		try {
 			mediaPlayer.setDataSource(this, Uri.parse(listen_url));
@@ -105,17 +85,7 @@ public class StationListenService extends Service {
 			Log.e("DEBUG", "prepareAsync IllegalStateException");
 			playback_status = -1;
 		} 
-		
-		// Don't start playback yet, wait for a client command.
-		/*
-		// If no error so far, start
-		if (playback_status == 0) {
-			mediaPlayer.start();
-			playback_status = 1;
-			sendMessageToUI(playback_status);
-		}
-		*/
-		
+			
 		return START_REDELIVER_INTENT;
 	}
 	
@@ -184,10 +154,6 @@ public class StationListenService extends Service {
                 		service.mediaPlayer.pause();
                 		service.playback_status = 5;
                 	}
-                }
-                else if (msg.arg1 == 666) {
-                	// Pause playback
-                	service.stopSelf();
                 }
             	service.sendMessageToUI(service.playback_status);
                 break;
