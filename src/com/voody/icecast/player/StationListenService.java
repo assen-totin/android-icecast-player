@@ -24,6 +24,7 @@ import android.os.Messenger;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
@@ -62,7 +63,16 @@ public class StationListenService extends Service {
 		if (recvBundle != null)
 			listen_url = recvBundle.getString("listen_url");
 		
-		listen_url = "http://192.168.168.104:8000/stream.ogg";
+		//listen_url = "http://192.168.168.104:8000/stream.ogg";
+		
+		// Try to add a slash at the end of the URL if it is directory (i.e. no known extension)
+		String extension = listen_url.substring(listen_url.lastIndexOf('.'));
+		String mime_type = MimeTypeMap.getFileExtensionFromUrl(extension);
+		if (mime_type == null) {
+			listen_url += "/";
+			Log.e("DEBUG", "SERVICE extension retrieved " + extension);
+			Log.e("DEBUG", "SERVICE added slash to URL, new is " + listen_url);
+		}
 		
 		mediaPlayer.reset();
 		
