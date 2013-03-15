@@ -66,16 +66,25 @@ public class StationListenService extends Service {
 		//listen_url = "http://192.168.168.104:8000/stream.ogg";
 		
 		// Try to add a slash at the end of the URL if it is directory (i.e. no known extension)
-		String extension = listen_url.substring(listen_url.lastIndexOf('.'));
-		String mime_type = MimeTypeMap.getFileExtensionFromUrl(extension);
-		if (mime_type == null) {
-			Log.e("DEBUG", "SERVICE unknown extension retrieved " + extension);
-			if (listen_url.substring(listen_url.length() - 1) != "/") {
-				Log.e("DEBUG", "SERVICE added slash to URL, new is " + listen_url);
-				listen_url += "/";
-			}
-		}
-		
+		//String extension = listen_url.substring(listen_url.lastIndexOf('.'));
+		String extension = MimeTypeMap.getFileExtensionFromUrl(listen_url);
+		Log.e("DEBUG", "SERVICE extension retrieved " + extension);
+	    if (extension != null) {
+	    	Log.e("DEBUG", "SERVICE extension is null");
+	        MimeTypeMap mime = MimeTypeMap.getSingleton();
+	        String mime_type = mime.getMimeTypeFromExtension(extension);
+	        Log.e("DEBUG", "SERVICE MIME type retrieved " + mime_type);
+	        if (mime_type == null) {
+	        	Log.e("DEBUG", "SERVICE mime_type is null");
+	        	if (listen_url.substring(listen_url.length() - 1) != "/") {
+	        		Log.e("DEBUG", "SERVICE listen_url does not end with slash");
+	        		//listen_url += "/";
+	        		listen_url += ".m3u";
+	        		Log.e("DEBUG", "SERVICE added slash to URL, new is " + listen_url);
+	        	}
+	        }
+	    }
+			    
 		mediaPlayer.reset();
 		
 		try {
