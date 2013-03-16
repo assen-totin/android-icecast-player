@@ -63,7 +63,7 @@ public class StationListenService extends Service {
 		if (recvBundle != null)
 			listen_url = recvBundle.getString("listen_url");
 		
-		//listen_url = "http://192.168.168.104:8000/stream.boza";
+		//listen_url = "http://192.168.168.104:8000/stream.ogg";
 		
 		// Try to add a slash at the end of the URL if it is directory (i.e. no known extension)
 		/*
@@ -91,20 +91,20 @@ public class StationListenService extends Service {
 		try {
 			mediaPlayer.setDataSource(this, Uri.parse(listen_url));
 		} catch (IllegalArgumentException e) {
-			Log.e("DEBUG", "setDataSource IllegalArgumentException");
+			//Log.e("DEBUG", "setDataSource IllegalArgumentException");
 			playback_status = -1;
 		} catch (IllegalStateException e) {
-			Log.e("DEBUG", "setDataSource IllegalStateException");
+			//Log.e("DEBUG", "setDataSource IllegalStateException");
 			playback_status = -1;
 		} catch (IOException e) {
-			Log.e("DEBUG", "setDataSource IOException");
+			//Log.e("DEBUG", "setDataSource IOException");
 			playback_status = -1;
 		}
 		
 		try {
 			mediaPlayer.prepareAsync();
 		} catch (IllegalStateException e) {
-			Log.e("DEBUG", "prepareAsync IllegalStateException");
+			//Log.e("DEBUG", "prepareAsync IllegalStateException");
 			playback_status = -1;
 		} 
 			
@@ -113,7 +113,7 @@ public class StationListenService extends Service {
 	
 	@Override
 	public void onDestroy() {
-		Log.e("DEBUG", "SERVICE Called onDestroy");
+		//Log.e("DEBUG", "SERVICE Called onDestroy");
 		mediaPlayer.stop();
 		mediaPlayer.release();
 		wifiLock.release();

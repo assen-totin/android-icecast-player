@@ -57,7 +57,7 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-		Log.e("DEBUG", "Called onCreate");
+		//Log.e("DEBUG", "Called onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_url_img);
 
@@ -80,15 +80,16 @@ public class StationListenActivityImg extends Activity {
         
 		//Prefer savedInstanceState to original intent bundle
 		if (savedInstanceState == null) {
-			Log.e("DEBUG", "onCreate savedInstanceState == null");
+			//Log.e("DEBUG", "onCreate savedInstanceState == null");
 			recvBundle = this.getIntent().getExtras();
 		}
 		else {
-			Log.e("DEBUG", "onCreate savedInstanceState != null");
+			//Log.e("DEBUG", "onCreate savedInstanceState != null");
 			recvBundle = savedInstanceState;
 			service_component_name = recvBundle.getParcelable("service_component_name");
 			buttonPauseState = recvBundle.getBoolean("buttonPauseState");	
 	        buttonPlayState = recvBundle.getBoolean("buttonPlayState");
+	        keep_playing = recvBundle.getBoolean("keep_playing");
 		}
 			
     	server_name = recvBundle.getString("server_name");
@@ -100,9 +101,8 @@ public class StationListenActivityImg extends Activity {
     	bitrate = recvBundle.getString("bitrate");         
         textViewBitrate.setText(bitrate + " kbps");
         
-        keep_playing = recvBundle.getBoolean("keep_playing");
         if (keep_playing) {
-        	Log.e("DEBUG", "onCreate keep_playing");
+        	//Log.e("DEBUG", "onCreate keep_playing");
         	try {
 				serviceClass = Class.forName(service_component_name.getClassName());
 			} catch (ClassNotFoundException e) {
@@ -117,18 +117,18 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	public void onRestart() {
-		Log.e("DEBUG", "Called onRestart");
+		//Log.e("DEBUG", "Called onRestart");
 		super.onRestart();
 	}
 	
 	@Override
 	public void onStart() {
-		Log.e("DEBUG", "Called onStart");
+		//Log.e("DEBUG", "Called onStart");
 		super.onStart();
 				
         if (first_run) {
         	// We have been launched, not resurrected for config (screen orientation) change
-        	Log.e("DEBUG", "onStart first_run && !keep_playing");
+        	//Log.e("DEBUG", "onStart first_run && !keep_playing");
         	 
         	//Start our service
         	sendBundle = new Bundle();
@@ -154,7 +154,7 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	public void onResume() {
-		Log.e("DEBUG", "Called onResume");
+		//Log.e("DEBUG", "Called onResume");
 		super.onResume();
 		
 		dbHelper = new SQLiteHelper(StationListenActivityImg.this);
@@ -166,7 +166,7 @@ public class StationListenActivityImg extends Activity {
 		
 		mPrefs = getPreferences(0);
 		if (!first_run) {
-			Log.e("DEBUG", "onResume !first_run");
+			//Log.e("DEBUG", "onResume !first_run");
 			buttonPlayState = mPrefs.getBoolean("buttonPlayState", false);
 			buttonPauseState = mPrefs.getBoolean("buttonPauseState", false);
 			startTime = mPrefs.getLong("startTime", System.currentTimeMillis());
@@ -185,7 +185,7 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	public void onPause() {
-		Log.e("DEBUG", "Called onPause");
+		//Log.e("DEBUG", "Called onPause");
 		super.onPause();
         ed = mPrefs.edit();
         ed.putLong("startTime", startTime);
@@ -196,7 +196,7 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	public void onStop() {
-		Log.e("DEBUG", "Called onStop");
+		//Log.e("DEBUG", "Called onStop");
 		doUnbindService();
 		dbHelper.close();
 		super.onStop();
@@ -204,9 +204,9 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	public void onDestroy() {
-		Log.e("DEBUG", "Called onDestroy");
+		//Log.e("DEBUG", "Called onDestroy");
 		if (!keep_playing) {
-			Log.e("DEBUG", "onDestroy !keep_playing");
+			//Log.e("DEBUG", "onDestroy !keep_playing");
 						
 			stopService(new Intent(this, serviceClass));
 		}
@@ -215,8 +215,10 @@ public class StationListenActivityImg extends Activity {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
-		Log.e("DEBUG", "Called savedInstanceState");
+		//Log.e("DEBUG", "Called savedInstanceState");
 			
+		keep_playing = true;
+		
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
@@ -224,13 +226,11 @@ public class StationListenActivityImg extends Activity {
 		savedInstanceState.putBoolean("buttonPauseState", buttonPauseState);
 		savedInstanceState.putBoolean("keep_playing", keep_playing);
 		savedInstanceState.putParcelable("service_component_name", service_component_name);
-		
-		keep_playing = true;
 	}
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		Log.e("DEBUG", "Called restoreInstanceState");
+		//Log.e("DEBUG", "Called restoreInstanceState");
 	}
 	
 	Button.OnTouchListener buttonPauseTouchListener = new Button.OnTouchListener(){
@@ -290,10 +290,10 @@ public class StationListenActivityImg extends Activity {
 	
 	Runnable runDelayed = new Runnable(){
         public void run() {
-        	Log.e("DEBUG", "Called runDelayed");
+        	//Log.e("DEBUG", "Called runDelayed");
     		// Query the service if it is running, but only if have not received error message
         	if (service_status >=0) {
-        		Log.e("DEBUG", "runDelayed service_status >= 0");
+        		//Log.e("DEBUG", "runDelayed service_status >= 0");
         		sendMessageToService(99);
         	}
         }
@@ -335,7 +335,7 @@ public class StationListenActivityImg extends Activity {
     }
     
     void startPlaying() {
-    	Log.e("DEBUG", "Called startPlaying");
+    	//Log.e("DEBUG", "Called startPlaying");
     	
     	if (service_status == 10)
     		return;
@@ -343,7 +343,7 @@ public class StationListenActivityImg extends Activity {
     	service_status = 10;
     	if (startTime == 0) {
     		// we have just been launched
-    		Log.e("DEBUG", "startPlaying startTime == 0");
+    		//Log.e("DEBUG", "startPlaying startTime == 0");
     		startTime = System.currentTimeMillis();
     	}
     	
@@ -370,7 +370,7 @@ public class StationListenActivityImg extends Activity {
     }
 
     void showLoading() {
-    	Log.e("DEBUG", "Called showLoading");
+    	//Log.e("DEBUG", "Called showLoading");
     	service_status = 0;
     	runDelayedHandler.postDelayed(runDelayed, 5000);
         Toast toast1 = Toast.makeText(this, getString(R.string.loading_station), Toast.LENGTH_SHORT);
