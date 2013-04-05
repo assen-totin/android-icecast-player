@@ -37,11 +37,13 @@
         android:id="@+id/settings_refresh_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/settings_refresh_1"
         android:layout_below="@+id/settings_cb"
-        android:paddingTop="@dimen/padding_medium"
+        android:layout_toRightOf="@+id/settings_refresh_1"
         android:ems="2"
-        android:hint="@string/number_7">
+        android:hint="@string/number_7"
+        android:inputType="number"
+        android:paddingTop="@dimen/padding_medium" >
+
     </EditText>
 
     <TextView
