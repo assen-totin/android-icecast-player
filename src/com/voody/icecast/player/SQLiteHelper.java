@@ -21,7 +21,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	private static final String DB_INSERT_VERSION = "INSERT INTO version (version) VALUES (" + DATABASE_VERSION + ");";
 	private static final String DB_INSERT_UPDATES = "INSERT INTO updates (unix_timestamp) VALUES ('1000');";
-	private static final String DB_INSERT_SETTINGS1 = "INSERT INTO settings (name, val) VALUES ('auto_update','1')";
+	private static final String DB_INSERT_SETTINGS1 = "INSERT INTO settings (name, val) VALUES ('auto_refresh','1')";
 	private static final String DB_INSERT_SETTINGS2 = "INSERT INTO settings (name, val) VALUES ('refresh_days','7')";
 	
 	public SQLiteHelper(Context context) {
@@ -252,16 +252,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		Cursor cursor = database.rawQuery(query1, null);
 		String result = null;
 		if (cursor.moveToFirst()) {
-			do {
-				result = cursor.getString(0); // 0 is the first column  
-			} while (cursor.moveToNext());
+				result = cursor.getString(0); // 0 is the first column   
 		}
 		return result;
 	}
 	
 	public void setSetting(String name, String value) {
 		SQLiteDatabase database = this.getWritableDatabase();
-		String query = "UPDATE settings SET name='" + value + "'";
+		String query = "UPDATE settings SET val='" + value + "' WHERE name='" + name + "'";
 		database.execSQL(query);
 	}
 }

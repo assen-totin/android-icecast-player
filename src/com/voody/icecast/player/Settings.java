@@ -31,6 +31,7 @@ public class Settings extends Activity {
         buttonHome.setOnTouchListener(buttonHomeTouchListener);
         
         cbAutoRefresh = (CheckBox) findViewById(R.id.settings_cb);
+        cbAutoRefresh.setOnClickListener(cbAutoRefreshClickListener);
         
         textViewDays = (EditText) findViewById(R.id.settings_refresh_text);
         textViewDays.addTextChangedListener(tw);
@@ -41,11 +42,13 @@ public class Settings extends Activity {
         textViewDays.setText(refresh_days);
         if (auto_refresh.equals("1")) {
         	cbAutoRefresh.setChecked(true);
-        	textViewDays.setEnabled(true);
+        	//textViewDays.setEnabled(true);
+        	//textViewDays.setFocusable(true);
         }
         else {
         	cbAutoRefresh.setChecked(false);
-        	textViewDays.setEnabled(false);       	
+        	textViewDays.setEnabled(false);  
+        	textViewDays.setFocusable(false);
         }
 	}
 	
@@ -80,14 +83,15 @@ public class Settings extends Activity {
 		public void onClick(View cb) {
 			refresh_days = textViewDays.getText().toString();
 			if (((CheckBox) cb).isChecked()) {
+				textViewDays.setFocusableInTouchMode(true);
 				textViewDays.setEnabled(true);
 				dbHelper.setSetting("auto_refresh", "1");
 				dbHelper.setSetting("refresh_days", refresh_days);
 			}
 			else {
 				textViewDays.setEnabled(false);
+				textViewDays.setFocusable(false);
 				dbHelper.setSetting("auto_refresh", "0");
-				dbHelper.setSetting("refresh_days", refresh_days);
 			}
 			
 		}
