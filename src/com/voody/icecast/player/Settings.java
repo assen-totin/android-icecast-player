@@ -3,18 +3,21 @@ package com.voody.icecast.player;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Settings extends Activity {
-	ImageView buttonFavourite, buttonHome;
+	ImageView buttonHome;
 	CheckBox cbAutoRefresh;
-	TextView textViewDays;
+	EditText textViewDays;
 	String auto_refresh, refresh_days;
 	Boolean auto_enabled = false;
 		
@@ -23,16 +26,14 @@ public class Settings extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings);
-		    
-        buttonFavourite = (ImageView)findViewById(R.id.favourite);
-        buttonFavourite.setOnTouchListener(buttonFavouriteTouchListener);
-		
+		    	
         buttonHome = (ImageView)findViewById(R.id.go_home);
         buttonHome.setOnTouchListener(buttonHomeTouchListener);
         
         cbAutoRefresh = (CheckBox) findViewById(R.id.settings_cb);
         
-        textViewDays = (TextView) findViewById(R.id.settings_refresh_text);
+        textViewDays = (EditText) findViewById(R.id.settings_refresh_text);
+        textViewDays.addTextChangedListener(tw);
         
         String auto_refresh = dbHelper.getSetting("auto_refresh");
         String refresh_days = dbHelper.getSetting("refresh_days");
@@ -57,40 +58,39 @@ public class Settings extends Activity {
 		super.onStop();
 	}	
 
+	TextWatcher tw = new TextWatcher() {
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			String refresh_days = arg0.toString();
+			dbHelper.setSetting("refresh_days", refresh_days);
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {		
+		}
+		
+	};
+	
 	CheckBox.OnClickListener cbAutoRefreshClickListener = new CheckBox.OnClickListener(){
 		@Override
 		public void onClick(View cb) {
+			refresh_days = textViewDays.getText().toString();
 			if (((CheckBox) cb).isChecked()) {
 				textViewDays.setEnabled(true);
+				dbHelper.setSetting("auto_refresh", "1");
+				dbHelper.setSetting("refresh_days", refresh_days);
 			}
 			else {
 				textViewDays.setEnabled(false);
+				dbHelper.setSetting("auto_refresh", "0");
+				dbHelper.setSetting("refresh_days", refresh_days);
 			}
 			
 		}
-	};
-	
-	Button.OnTouchListener buttonFavouriteTouchListener = new Button.OnTouchListener(){
-	   	public boolean onTouch(View view, MotionEvent event)  {
-	   		Toast toast;
-	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
-	   			auto_enabled = cbAutoRefresh.isChecked();
-	   			refresh_days = textViewDays.getText().toString();
-	   				   			   			
-   				if (auto_enabled) {
-   					dbHelper.setSetting("auto_refresh", "1");
-   					dbHelper.setSetting("refresh_days", refresh_days);
-   				}
-   				else {
-   					dbHelper.setSetting("auto_refresh", "0");
-   					dbHelper.setSetting("refresh_days", refresh_days);
-   				}
-   				
-   	        	toast = Toast.makeText(Settings.this, getString(R.string.settings_updated), Toast.LENGTH_SHORT);
-   	        	toast.show();
-	   		}
-	   		return true;
-	   	}
 	};
 	
 	Button.OnTouchListener buttonHomeTouchListener = new Button.OnTouchListener(){

@@ -57,6 +57,11 @@
             android:theme="@style/AppTheme"
             android:label="@string/title_manually_add">
         </activity>
+        <activity 
+            android:name="com.voody.icecast.player.Settings"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_activity_settings">
+        </activity>        
         <service android:enabled="true" android:name="com.voody.icecast.player.StationListenService" />
         
     </application>
