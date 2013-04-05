@@ -87,7 +87,7 @@ public final class R {
         public static final int manually_exists=0x7f05001b;
         public static final int no_internet=0x7f05000a;
         public static final int no_results=0x7f050009;
-        public static final int number_7=0x7f050024;
+        public static final int number_7=0x7f050023;
         public static final int search=0x7f05000b;
         public static final int search_hint=0x7f05000c;
         public static final int server_name=0x7f05000e;
@@ -95,7 +95,6 @@ public final class R {
         public static final int settings_auto_refresh=0x7f050020;
         public static final int settings_refresh_time1=0x7f050021;
         public static final int settings_refresh_time2=0x7f050022;
-        public static final int settings_updated=0x7f050023;
         public static final int time=0x7f050012;
         public static final int title_activity_download=0x7f050002;
         public static final int title_activity_genres=0x7f050004;

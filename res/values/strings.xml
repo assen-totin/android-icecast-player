@@ -35,6 +35,5 @@
     <string name="settings_auto_refresh">Automaticaly refresh stations</string>
     <string name="settings_refresh_time1">Refresh each</string>
     <string name="settings_refresh_time2">days</string>
-    <string name="settings_updated">Settings updated.</string>
     <string name="number_7">7</string>
 </resources>
