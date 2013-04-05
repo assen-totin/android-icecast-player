@@ -1,7 +1,6 @@
 <resources>
 
     <string name="app_name">Icecast Player</string>
-    <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Icecast Player</string>
     <string name="title_activity_download">Icecast Player - Downloading stations</string>
     <string name="title_activity_process">Icecast Player - Processing stations</string>
@@ -9,6 +8,7 @@
     <string name="title_activity_stations">Icecast Player - Stations</string>
     <string name="title_activity_listen">Icecast Player - Listen</string>
     <string name="title_manually_add">Icecast Player - Manually Add Station</string>
+    <string name="title_activity_settings">Icecast Player - Settings</string>
     <string name="no_results">No results found :-(</string>
     <string name="no_internet">No Internet connection, shuting down.</string>
     <string name="search">Search</string>
@@ -25,10 +25,16 @@
     <string name="cd_favourite_add">Add to favourites</string>
     <string name="cd_favourite_del">Delete from favourites</string>
     <string name="cd_go_home">Return to menu</string>
-    <string name="manually_add">Manually Add Station</string>
+    <string name="manually_add">Add Station</string>
     <string name="manually_added">Added the station to Favourites.</string>
     <string name="manually_exists">Station already exists in Favourites.</string>
     <string name="url_hint">http://&#8230;</string>
     <string name="unable_to_load_station">Unable to play this station.</string>
     <string name="loading_station">Loading station&#8230;</string>
+    <string name="settings">Settings</string>
+    <string name="settings_auto_refresh">Automaticaly refresh stations</string>
+    <string name="settings_refresh_time1">Refresh each</string>
+    <string name="settings_refresh_time2">days</string>
+    <string name="settings_updated">Settings updated.</string>
+    <string name="number_7">7</string>
 </resources>

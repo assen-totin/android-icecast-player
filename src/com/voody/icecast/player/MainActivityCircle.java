@@ -15,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivityCircle extends Activity {
-    Button buttonSearch;
+    Button buttonSearch, buttonAdd, buttonSettings;
     Bundle sendBundle = new Bundle();
     ImageView menuCircle;
     int menu_circle_size, menu_circle_number = 0, displaySmaller;
     int[] widget_coord = new int[2];
     Intent intent;
-    final static long UPDATE_THRESHOLD = 604800; // Seconds: one week
+    //final static long UPDATE_THRESHOLD = 604800; // Seconds: one week
     //final static long UPDATE_THRESHOLD = 3600; 
     
     @Override
@@ -41,15 +41,23 @@ public class MainActivityCircle extends Activity {
         menuCircle = (ImageView)findViewById(R.id.menu_circle);
         menuCircle.setOnTouchListener(menuCircleTouchListener);
         
-        buttonSearch = (Button)findViewById(R.id.manually_add);
-        buttonSearch.setOnClickListener(buttonManuallyClickListener);
+        buttonAdd = (Button)findViewById(R.id.manually_add);
+        buttonAdd.setOnClickListener(buttonManuallyClickListener);
+        
+        buttonSettings = (Button)findViewById(R.id.settings);
+        buttonSettings.setOnClickListener(buttonSettingsClickListener);
         
         SQLiteHelper dbHelper = new SQLiteHelper(MainActivityCircle.this);
-        long last_update = dbHelper.getUpdates();
-        long unix_timestamp = System.currentTimeMillis()/1000;
-        if ((unix_timestamp - last_update) > UPDATE_THRESHOLD) {
-	        Intent intent = new Intent(MainActivityCircle.this, DownloadFile.class);
-	        startActivity(intent);
+        String auto_refresh = dbHelper.getSetting("auto_refresh");
+        if (auto_refresh.equals("1")) {
+        	long last_update = dbHelper.getUpdates();
+        	long unix_timestamp = System.currentTimeMillis()/1000;
+        	String refresh_days = dbHelper.getSetting("refresh_days");
+        	long threshold = Integer.parseInt(refresh_days) * 86400;
+        	if ((unix_timestamp - last_update) > threshold) {
+        		Intent intent = new Intent(MainActivityCircle.this, DownloadFile.class);
+        		startActivity(intent);
+        	}
         }
         dbHelper.close();
     }
@@ -128,6 +136,13 @@ public class MainActivityCircle extends Activity {
     Button.OnClickListener buttonManuallyClickListener = new Button.OnClickListener(){
        	public void onClick(View view)  {
        		Intent intent = new Intent(view.getContext(), ManuallyAddStation.class);
+	        startActivity(intent);
+       	}
+    };
+    
+    Button.OnClickListener buttonSettingsClickListener = new Button.OnClickListener(){
+       	public void onClick(View view)  {
+       		Intent intent = new Intent(view.getContext(), Settings.class);
 	        startActivity(intent);
        	}
     };

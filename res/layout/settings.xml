@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/settings_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/settings_auto_refresh"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <CheckBox
+        android:id="@+id/settings_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/settings_text"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        />
+
+    <TextView
+        android:id="@+id/settings_refresh_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_cb"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/settings_refresh_time1" 
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <EditText
+        android:id="@+id/settings_refresh_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/settings_refresh_1"
+        android:layout_below="@+id/settings_cb"
+        android:paddingTop="@dimen/padding_medium"
+        android:ems="2"
+        android:hint="@string/number_7">
+    </EditText>
+
+    <TextView
+        android:id="@+id/settings_refresh_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_cb"
+        android:layout_toRightOf="@+id/settings_refresh_text"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/settings_refresh_time2" 
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <LinearLayout
+        android:id="@+id/linear_layout_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_refresh_text"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:paddingTop="@dimen/padding_large" >
+    
+    <LinearLayout
+        android:id="@+id/linear_layout_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <LinearLayout 
+        android:id="@+id/linear_layout_m"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content" 
+        android:layout_weight="1" />
+        
+    <LinearLayout
+        android:id="@+id/linear_layout_r"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    <ImageView
+        android:id="@+id/favourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:contentDescription="@string/cd_favourite_add"
+        android:src="@drawable/b3_add" />
+
+    <ImageView
+        android:id="@+id/go_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:contentDescription="@string/cd_go_home"
+        android:src="@drawable/b4" />
+
+    </LinearLayout>
+    </LinearLayout>
+
+
+    
+</RelativeLayout>

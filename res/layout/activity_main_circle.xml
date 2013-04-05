@@ -54,9 +54,19 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
         android:text="@string/manually_add"
-        android:ems="16"
+        android:ems="8"
         android:textColor="#000000" />
 
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:text="@string/settings"
+        android:ems="8"
+        android:textColor="#000000" />
+    
+    
     </LinearLayout>
     
 </RelativeLayout>

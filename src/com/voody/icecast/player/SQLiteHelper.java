@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "icecast.sqlite";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	private static final String DB_CREATE_TABLE_STATIONS = "CREATE TABLE stations (server_name VARCHAR(255), listen_url VARCHAR(255), bitrate VARCHAR(255), genre VARCHAR(255));";
 	private static final String DB_CREATE_TABLE_FAVOURITES = "CREATE TABLE favourites (server_name VARCHAR(255), listen_url VARCHAR(255), bitrate VARCHAR(255), genre VARCHAR(255));";	
@@ -20,8 +20,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	private static final String DB_CREATE_TABLE_VERSION = "CREATE TABLE version (version INT);";
 
 	private static final String DB_INSERT_VERSION = "INSERT INTO version (version) VALUES (" + DATABASE_VERSION + ");";
-	private static final String DB_INSERT_SETTINGS = "INSERT INTO settings (name, val) VALUES ('Favourites','1')";
 	private static final String DB_INSERT_UPDATES = "INSERT INTO updates (unix_timestamp) VALUES ('1000');";
+	private static final String DB_INSERT_SETTINGS1 = "INSERT INTO settings (name, val) VALUES ('auto_update','1')";
+	private static final String DB_INSERT_SETTINGS2 = "INSERT INTO settings (name, val) VALUES ('refresh_days','7')";
 	
 	public SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,19 +38,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		database.execSQL(DB_CREATE_TABLE_VERSION);
 		
 		database.execSQL(DB_INSERT_VERSION);
-		database.execSQL(DB_INSERT_SETTINGS);
 		database.execSQL(DB_INSERT_UPDATES);
+		database.execSQL(DB_INSERT_SETTINGS1);
+		database.execSQL(DB_INSERT_SETTINGS2);
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		/*
-		Log.w(SQLiteHelper.class.getName(),
-				"Upgrading database from version " + oldVersion + " to "
-						+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMENTS);
-		onCreate(db);
-		*/
+	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+		if (oldVersion < 2) {
+			database.execSQL("DELETE from settings where name='Favourites'");
+			database.execSQL(DB_INSERT_SETTINGS1);
+			database.execSQL(DB_INSERT_SETTINGS2);
+		}
 	}
 
 	public void deleteFromStations() {
@@ -244,5 +244,24 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 		return results;
+	}
+	
+	public String getSetting(String name) {
+		SQLiteDatabase database = this.getReadableDatabase();
+		String query1 = "SELECT val FROM settings WHERE name='" + name + "'";
+		Cursor cursor = database.rawQuery(query1, null);
+		String result = null;
+		if (cursor.moveToFirst()) {
+			do {
+				result = cursor.getString(0); // 0 is the first column  
+			} while (cursor.moveToNext());
+		}
+		return result;
+	}
+	
+	public void setSetting(String name, String value) {
+		SQLiteDatabase database = this.getWritableDatabase();
+		String query = "UPDATE settings SET name='" + value + "'";
+		database.execSQL(query);
 	}
 }
