@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.voody.icecast.player"
-    android:versionCode="3"
-    android:versionName="3.0" >
+    android:versionCode="4"
+    android:versionName="4.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
