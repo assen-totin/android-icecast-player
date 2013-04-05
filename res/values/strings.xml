@@ -32,7 +32,7 @@
     <string name="unable_to_load_station">Unable to play this station.</string>
     <string name="loading_station">Loading station&#8230;</string>
     <string name="settings">Settings</string>
-    <string name="settings_auto_refresh">Automaticaly refresh stations</string>
+    <string name="settings_auto_refresh">Automatically refresh stations</string>
     <string name="settings_refresh_time1">Refresh each</string>
     <string name="settings_refresh_time2">days</string>
     <string name="number_7">7</string>
