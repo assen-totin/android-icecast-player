@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
+        android:contentDescription="@string/acc_search"
         android:text="@string/search"
         android:textColor="#000000" />
 
@@ -53,8 +54,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
-        android:text="@string/manually_add"
+        android:contentDescription="@string/acc_manually_add"
         android:ems="8"
+        android:text="@string/manually_add"
         android:textColor="#000000" />
 
     <Button
@@ -62,10 +64,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
-        android:text="@string/settings"
+        android:contentDescription="@string/acc_settings"
         android:ems="8"
+        android:text="@string/settings"
         android:textColor="#000000" />
-    
     
     </LinearLayout>
     

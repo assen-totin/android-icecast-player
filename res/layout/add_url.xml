@@ -18,7 +18,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/textView_server_name_1"
-        android:paddingTop="@dimen/padding_medium">
+        android:hint="@string/acc_add_server"
+        android:paddingTop="@dimen/padding_medium" >
+
         <requestFocus />
     </EditText>
 

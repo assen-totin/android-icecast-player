@@ -19,12 +19,6 @@
     <string name="bitrate">Bitrate: </string>
     <string name="bitrate_kbps">kbps</string>
     <string name="time">Time: </string>
-    <string name="cd_menu">Menu</string>
-    <string name="cd_play">Play</string>
-    <string name="cd_stop">Pause</string>
-    <string name="cd_favourite_add">Add to favourites</string>
-    <string name="cd_favourite_del">Delete from favourites</string>
-    <string name="cd_go_home">Return to menu</string>
     <string name="manually_add">Add Station</string>
     <string name="manually_added">Added the station to Favourites.</string>
     <string name="manually_exists">Station already exists in Favourites.</string>
@@ -36,4 +30,17 @@
     <string name="settings_refresh_time1">Refresh each</string>
     <string name="settings_refresh_time2">days</string>
     <string name="number_7">7</string>
+    
+    <!-- Accessibility strings -->
+    <string name="cd_menu">Menu</string>
+    <string name="cd_play">Play</string>
+    <string name="cd_stop">Pause</string>
+    <string name="cd_favourite_add">Add to favourites</string>
+    <string name="cd_favourite_del">Delete from favourites</string>
+    <string name="cd_go_home">Return to menu</string>
+    <string name="acc_search">Search button</string>
+    <string name="acc_manually_add">Add new station button</string>
+    <string name="acc_settings">Change settings button</string>
+    <string name="acc_add_server">Enter server name</string>
+    <string name="acc_enable_refresh">Checkbox to enable or disable automatic refresh of stations</string>
 </resources>

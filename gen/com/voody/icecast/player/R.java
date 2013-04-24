@@ -70,31 +70,38 @@ public final class R {
         public static final int settings=0x7f030005;
     }
     public static final class string {
+        public static final int acc_add_server=0x7f050027;
+        public static final int acc_enable_refresh=0x7f050028;
+        public static final int acc_manually_add=0x7f050025;
+        public static final int acc_search=0x7f050024;
+        public static final int acc_settings=0x7f050026;
         public static final int app_name=0x7f050000;
         public static final int bitrate=0x7f050010;
         public static final int bitrate_kbps=0x7f050011;
-        public static final int cd_favourite_add=0x7f050016;
-        public static final int cd_favourite_del=0x7f050017;
-        public static final int cd_go_home=0x7f050018;
-        public static final int cd_menu=0x7f050013;
-        public static final int cd_play=0x7f050014;
-        public static final int cd_stop=0x7f050015;
+        public static final int cd_favourite_add=0x7f050021;
+        public static final int cd_favourite_del=0x7f050022;
+        public static final int cd_go_home=0x7f050023;
+        /**  Accessibility strings 
+         */
+        public static final int cd_menu=0x7f05001e;
+        public static final int cd_play=0x7f05001f;
+        public static final int cd_stop=0x7f050020;
         public static final int empty=0x7f05000d;
         public static final int listen_url=0x7f05000f;
-        public static final int loading_station=0x7f05001e;
-        public static final int manually_add=0x7f050019;
-        public static final int manually_added=0x7f05001a;
-        public static final int manually_exists=0x7f05001b;
+        public static final int loading_station=0x7f050018;
+        public static final int manually_add=0x7f050013;
+        public static final int manually_added=0x7f050014;
+        public static final int manually_exists=0x7f050015;
         public static final int no_internet=0x7f05000a;
         public static final int no_results=0x7f050009;
-        public static final int number_7=0x7f050023;
+        public static final int number_7=0x7f05001d;
         public static final int search=0x7f05000b;
         public static final int search_hint=0x7f05000c;
         public static final int server_name=0x7f05000e;
-        public static final int settings=0x7f05001f;
-        public static final int settings_auto_refresh=0x7f050020;
-        public static final int settings_refresh_time1=0x7f050021;
-        public static final int settings_refresh_time2=0x7f050022;
+        public static final int settings=0x7f050019;
+        public static final int settings_auto_refresh=0x7f05001a;
+        public static final int settings_refresh_time1=0x7f05001b;
+        public static final int settings_refresh_time2=0x7f05001c;
         public static final int time=0x7f050012;
         public static final int title_activity_download=0x7f050002;
         public static final int title_activity_genres=0x7f050004;
@@ -104,8 +111,8 @@ public final class R {
         public static final int title_activity_settings=0x7f050008;
         public static final int title_activity_stations=0x7f050005;
         public static final int title_manually_add=0x7f050007;
-        public static final int unable_to_load_station=0x7f05001d;
-        public static final int url_hint=0x7f05001c;
+        public static final int unable_to_load_station=0x7f050017;
+        public static final int url_hint=0x7f050016;
     }
     public static final class style {
         public static final int AppTheme=0x7f070000;
