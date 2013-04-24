@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivityCircle extends Activity {
-    Button buttonSearch, buttonAdd, buttonSettings;
+    Button buttonSearch, buttonAdd, buttonSettings, buttonGenres, buttonFavourites, buttonRecent;
     Bundle sendBundle = new Bundle();
     ImageView menuCircle;
     int menu_circle_size, menu_circle_number = 0, displaySmaller;
@@ -32,28 +32,35 @@ public class MainActivityCircle extends Activity {
         
         // Accessibility check
         AccessibilityManager am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
-        if (am.isEnabled())
+        if (am.isEnabled()) {
         	setContentView(R.layout.activity_main_buttons);
-        else
-        	setContentView(R.layout.activity_main_circle);
-        
-        if (!isOnline()) {
-        	Toast toast = Toast.makeText(MainActivityCircle.this, getString(R.string.no_internet), Toast.LENGTH_SHORT);
-        	toast.show();
-        	finish();
+        	buttonGenres = (Button)findViewById(R.id.butt_genres);
+        	buttonGenres.setOnClickListener(buttonGenresClickListener);
+        	buttonFavourites  = (Button)findViewById(R.id.butt_favourites);
+        	buttonFavourites.setOnClickListener(buttonFavouritesClickListener);
+        	buttonRecent = (Button)findViewById(R.id.butt_recent);
+        	buttonRecent.setOnClickListener(buttonRecentClickListener);
         }
-        
+        else {
+        	setContentView(R.layout.activity_main_circle);
+            menuCircle = (ImageView)findViewById(R.id.menu_circle);
+            menuCircle.setOnTouchListener(menuCircleTouchListener);
+        }
+
         buttonSearch = (Button)findViewById(R.id.search_button);
         buttonSearch.setOnClickListener(buttonSearchClickListener); 
-        
-        menuCircle = (ImageView)findViewById(R.id.menu_circle);
-        menuCircle.setOnTouchListener(menuCircleTouchListener);
-        
+
         buttonAdd = (Button)findViewById(R.id.manually_add);
         buttonAdd.setOnClickListener(buttonManuallyClickListener);
         
         buttonSettings = (Button)findViewById(R.id.settings);
         buttonSettings.setOnClickListener(buttonSettingsClickListener);
+
+        if (!isOnline()) {
+        	Toast toast = Toast.makeText(MainActivityCircle.this, getString(R.string.no_internet), Toast.LENGTH_SHORT);
+        	toast.show();
+        	finish();
+        }             
         
         SQLiteHelper dbHelper = new SQLiteHelper(MainActivityCircle.this);
         String auto_refresh = dbHelper.getSetting("auto_refresh");
@@ -152,6 +159,31 @@ public class MainActivityCircle extends Activity {
        	public void onClick(View view)  {
        		Intent intent = new Intent(view.getContext(), Settings.class);
 	        startActivity(intent);
+       	}
+    };
+    
+    Button.OnClickListener buttonGenresClickListener = new Button.OnClickListener(){
+       	public void onClick(View view)  {
+			intent = new Intent(MainActivityCircle.this, GenreListActivity.class);
+			startActivity(intent);
+       	}
+    };
+    
+    Button.OnClickListener buttonFavouritesClickListener = new Button.OnClickListener(){
+       	public void onClick(View view)  {
+			sendBundle.putString("mode", "favourites");
+			intent = new Intent(MainActivityCircle.this, StationListActivity.class);
+			intent.putExtras(sendBundle);
+			startActivity(intent);
+       	}
+    };
+    
+    Button.OnClickListener buttonRecentClickListener = new Button.OnClickListener(){
+       	public void onClick(View view)  {
+			sendBundle.putString("mode", "recent");
+			intent = new Intent(MainActivityCircle.this, StationListActivity.class);
+			intent.putExtras(sendBundle);
+			startActivity(intent);
        	}
     };
 }
