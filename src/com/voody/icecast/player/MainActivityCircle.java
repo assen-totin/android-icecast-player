@@ -28,7 +28,8 @@ public class MainActivityCircle extends Activity {
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);       
+        super.onCreate(savedInstanceState); 
+        
         // Accessibility check
         AccessibilityManager am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
         if (am.isEnabled())
