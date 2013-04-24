@@ -39,11 +39,11 @@
     <string name="cd_favourite_del">Delete from favourites button</string>
     <string name="cd_go_home">Return to main menu button</string>
     <string name="acc_search">Search button</string>
-    <string name="acc_manually_add">Add new station button</string>
-    <string name="acc_settings">Change settings button</string>
-    <string name="cd_genres">Go to list of genres button</string>
-    <string name="cd_favourites">Go to list of favourite stations button</string>
-    <string name="cd_recent">Go to list of recently listened stations button</string>
+    <string name="acc_manually_add">Add new station</string>
+    <string name="acc_settings">Change settings </string>
+    <string name="cd_genres">Go to list of genres</string>
+    <string name="cd_favourites">Go to list of favourite stations</string>
+    <string name="cd_recent">Go to list of recently listened stations</string>
     <string name="acc_genres">Genres</string>
     <string name="acc_favourites">Favourites</string>
     <string name="acc_recent">Recent</string>
