@@ -1,0 +1,107 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_large"
+        android:orientation="horizontal" >
+    
+    <EditText
+        android:id="@+id/search_form"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/search_hint" >
+    </EditText>
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:contentDescription="@string/acc_search"
+        android:text="@string/search"
+        android:textColor="#000000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_large"
+        android:orientation="vertical" >
+    
+    <Button
+        android:id="@+id/butt_genres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:contentDescription="@string/cd_genres"
+        android:ems="8"
+        android:text="@string/acc_genres"
+        android:textColor="#000000" />
+
+    <Button
+        android:id="@+id/butt_favourites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:contentDescription="@string/cd_favourites"
+        android:ems="8"
+        android:text="@string/acc_favourites"
+        android:textColor="#000000" />
+    
+    <Button
+        android:id="@+id/butt_recent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:contentDescription="@string/cd_recent"
+        android:ems="8"
+        android:text="@string/acc_recent"
+        android:textColor="#000000" />
+    
+    
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/linear_layout_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/menu_circle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_large"
+        android:orientation="horizontal" >
+    
+    <Button
+        android:id="@+id/manually_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:contentDescription="@string/acc_manually_add"
+        android:ems="8"
+        android:text="@string/manually_add"
+        android:textColor="#000000" />
+
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:contentDescription="@string/acc_settings"
+        android:ems="8"
+        android:text="@string/settings"
+        android:textColor="#000000" />
+    
+    </LinearLayout>
+    
+</RelativeLayout>

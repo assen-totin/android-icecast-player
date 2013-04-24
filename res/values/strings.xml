@@ -12,7 +12,6 @@
     <string name="no_results">No results found :-(</string>
     <string name="no_internet">No Internet connection, shuting down.</string>
     <string name="search">Search</string>
-    <string name="search_hint">Enter keyword</string>
     <string name="empty"></string>
     <string name="server_name">Server Name: </string>
     <string name="listen_url">URL: </string>
@@ -32,15 +31,23 @@
     <string name="number_7">7</string>
     
     <!-- Accessibility strings -->
-    <string name="cd_menu">Menu</string>
-    <string name="cd_play">Play</string>
-    <string name="cd_stop">Pause</string>
-    <string name="cd_favourite_add">Add to favourites</string>
-    <string name="cd_favourite_del">Delete from favourites</string>
-    <string name="cd_go_home">Return to menu</string>
+    <string name="search_hint">Enter keyword</string>
+    <string name="cd_menu">Main menu image</string>
+    <string name="cd_play">Play button</string>
+    <string name="cd_stop">Pause button</string>
+    <string name="cd_favourite_add">Add to favourites button</string>
+    <string name="cd_favourite_del">Delete from favourites button</string>
+    <string name="cd_go_home">Return to main menu button</string>
     <string name="acc_search">Search button</string>
     <string name="acc_manually_add">Add new station button</string>
     <string name="acc_settings">Change settings button</string>
+    <string name="cd_genres">Go to list of genres button</string>
+    <string name="cd_favourites">Go to list of favourite stations button</string>
+    <string name="cd_recent">Go to list of recently listened stations button</string>
+    <string name="acc_genres">Genres</string>
+    <string name="acc_favourites">Favourites</string>
+    <string name="acc_recent">Recent</string>
+    
     <string name="acc_add_server">Enter server name</string>
     <string name="acc_enable_refresh">Checkbox to enable or disable automatic refresh of stations</string>
 </resources>
