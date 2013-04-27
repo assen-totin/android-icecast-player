@@ -54,10 +54,14 @@ public class ManuallyAddStation extends Activity {
 	   	        }
 	   			
 	   			if (is_favourite) {
+	   				buttonFavourite.setImageResource(R.drawable.b3_add);
+	   				buttonFavourite.setContentDescription(getString(R.string.cd_favourite_add));
 	   				toast = Toast.makeText(ManuallyAddStation.this, getString(R.string.manually_exists), Toast.LENGTH_SHORT);
 	   			}
 	   			else {
 	   				dbHelper.insertManuallyStation(server_name, listen_url);
+	   				buttonFavourite.setImageResource(R.drawable.b3_del);
+	   				buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
 	   	        	toast = Toast.makeText(ManuallyAddStation.this, getString(R.string.manually_added), Toast.LENGTH_SHORT);
 	   			}
    	        	toast.show();

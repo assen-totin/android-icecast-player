@@ -264,11 +264,13 @@ public class StationListenActivityImg extends Activity {
 	   			if (is_favourite) {
 	   				dbHelper.deleteFromFavourites(listen_url);
 	   				buttonFavourite.setImageResource(R.drawable.b3_add);
+	   				buttonFavourite.setContentDescription(getString(R.string.cd_favourite_add));
 	   				is_favourite = false;
 	   			}
 	   			else {
 	   				dbHelper.insertIntoFavourites(listen_url);
 	   				buttonFavourite.setImageResource(R.drawable.b3_del);
+	   				buttonFavourite.setContentDescription(getString(R.string.cd_favourite_del));
 	   				is_favourite = true;
 	   			}
 	   		}
