@@ -1,10 +1,7 @@
 package com.voody.icecast.player;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 //import android.app.NotificationManager;
@@ -23,8 +20,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.PowerManager;
 import android.os.RemoteException;
-import android.util.Log;
-import android.webkit.MimeTypeMap;
+//import android.util.Log;
+
 
 public class StationListenService extends Service {
 	private MediaPlayer mediaPlayer;
@@ -108,7 +105,7 @@ public class StationListenService extends Service {
 			playback_status = -1;
 		} 
 			
-		return START_REDELIVER_INTENT;
+		return START_NOT_STICKY;
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ import android.os.IBinder;
 import android.os.Messenger;
 import android.os.Message;
 import android.os.RemoteException;
-import android.util.Log;
+//import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
