@@ -1,0 +1,31 @@
+Feb 22, 2014  - Version 4.2
+===========================
+* Prevent automatic playback restart when player has been killed by OOM
+
+May 21, 2013 - Version 4.1
+==========================
+* Improved support for screen-readers
+* Automatic detection if accessibility is enabled; the home screen will then 
+  use a new, button-only layout to allow easier navigation.
+
+April 18, 2013 - Version 4.0
+============================
+* You can change the number of days for auto-updates from the default 7, or
+* You can completely disable auto-updates.
+
+March 16, 2013 - Version 3.0
+============================
+* Continuous playback when the device is not in use (display dimmed).
+* Continuous playback when the device is switched to another programme.
+* Better handling of orientation changes, which now does not interrupt the playback.
+* Better handling of timer and buttons.
+
+Sep 25, 2012 - Version 2.0
+==========================
+
+Sep 22, 2012 - Version 1.0
+==========================
+* Initial release.
+
+
+

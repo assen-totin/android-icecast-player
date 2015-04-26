@@ -1,0 +1,7 @@
+INSTALLATION
+============
+
+The binary is available in Google Play.
+
+The source code is a ready-to-use Eclipse project. You need Android Tools installed in it (see Google's Adroid pages for details). There are no external dependencies.
+

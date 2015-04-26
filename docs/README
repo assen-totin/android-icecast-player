@@ -1,0 +1,38 @@
+This is an Android(TM) application to listen to Icecast online radio stations.
+
+FEATURES
+
+* Search by keyword (in genres and station names)
+* Automatically update station list (by default once every 7 days – time can be changed or updates can be disabled if they are too slow for you)
+* A list of recently listened stations
+* A list of favourite stations.
+* Continuous playback even when the display is dimmed or the when another program is launched and used.
+* Advanced accessibility features:
+-- Automatic detection of Accessibility Mode, replacing graphic navigation with button-baesed
+-- Improved hints and descriptions for fields and buttons for better screen reader experience.
+
+NOTES
+
+1. A note on genres: with Icecast, each server lists one or more words as its „genre“. Two approaches are possible:
+* Treat each string as a whole category name; I don’t like this, because „pop rock“ and „rock pop“ will appear as two different genres
+* Split each string into words and use each word as a separate category; this way, „pop“ and „rock“ will appear only once, but most stations will apear in more than one genre. This is the current behaviour.
+
+2. To speed up processing and decrease network load, the add-on sets up a local cache in SQLite database. The cache is updated if it is more than 7 days old.
+
+3. Some Icecast radio stations obviously feed broken UTF-8 in their names and genres – there’s nothing to do about it, complain to the radio station. Read more on this problem
+
+4. The client-side search (as server-side seems unavailable with Icecast) searches both in genres and server names.
+
+5. Known issues:
+* On Android 4.x it takes a longer time before the playback begins – up to 30-40 seconds compared with almost instant playback on Android 2.x. Explanation: Android 4.x has a much larger, fixed buffer for media and the playback only begins when it is filled. Google provides no way to change this and, obviously, does not intend to fix it for any 4.x version.
+
+* Some devices say ‘Unable to play the station’ for each and any one. Explanation: Although rare, there are broken builds of Android in which the OS refuses to open a link which does not end with a familiar extension. Almost all IceCast stations have a URL that does not end with an ‘extension’ like .mp3 or .ogg, therefore, Android refuses to play them. You can either complain to your device vendor or seek an alternative Android build.
+
+* Refreshing stations list takes a long time. Explanation: The list comes in XML and needs to be processed to the internal database. Because it is large (over 10K+ entries), on Android we cannot use the standard XML-to-DOM converter – it is relatively fast, but needs a lot of memory – even  more than the 48 MB heap space which Android 4.x offers. So, instead SAX is used, which has a very small memory footprint but, as a trade-off, is CPU-intensive. You can use the Settings page to change the interval or completely disable auto-updates.
+
+ACKNOWLEDGEMENTS
+* Kellen Slager (somebody at gmail.com) for requesting the ‘Add custom URL’ feature
+* Michael (somebody at gmx.com) for requesting the background playback feature
+* Ton van Campen <somebody at wxs.nl> for requesting Accessibility features
+
+
