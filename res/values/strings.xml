@@ -6,12 +6,16 @@
     <string name="title_activity_process">Icecast Player - Processing stations</string>
     <string name="title_activity_genres">Icecast Player - Genres</string>
     <string name="title_activity_stations">Icecast Player - Stations</string>
+    <string name="title_activity_favourites">Icecast Player - Favourites</string>
+    <string name="title_activity_recent">Icecast Player - Recent</string>
     <string name="title_activity_listen">Icecast Player - Listen</string>
     <string name="title_manually_add">Icecast Player - Manually Add Station</string>
     <string name="title_activity_settings">Icecast Player - Settings</string>
     <string name="no_results">No results found :-(</string>
-    <string name="no_internet">No Internet connection, shuting down.</string>
+    <string name="no_internet">No Internet connection, shutting down.</string>
     <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="reset">Reset</string>
     <string name="empty"></string>
     <string name="server_name">Server Name: </string>
     <string name="listen_url">URL: </string>
@@ -32,6 +36,7 @@
     
     <!-- Accessibility strings -->
     <string name="search_hint">Enter keyword</string>
+    <string name="filter_hint">Filter keyword</string>
     <string name="cd_menu">Main menu image</string>
     <string name="cd_play">Play</string>
     <string name="cd_stop">Pause</string>
@@ -39,6 +44,8 @@
     <string name="cd_favourite_del">Delete from favourites</string>
     <string name="cd_go_home">Return to main menu</string>
     <string name="acc_search">Search button</string>
+    <string name="acc_filter">Filter button</string>
+    <string name="acc_reset">Reset button</string>
     <string name="acc_manually_add">Add new station</string>
     <string name="acc_settings">Change settings </string>
     <string name="cd_genres">Go to list of genres</string>

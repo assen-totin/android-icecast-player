@@ -98,9 +98,17 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return result;
 	}
 	
-	public ArrayList<String> getGenres() {
+	public ArrayList<String> getGenres(String query) {
 		SQLiteDatabase database = this.getReadableDatabase();
-		Cursor cursor = database.rawQuery("SELECT genre FROM stations GROUP BY genre ORDER BY genre", null);
+
+		String q;
+		if (query != null)
+			q = "SELECT genre FROM stations WHERE (genre LIKE '%" + query + "%') GROUP BY genre ORDER BY genre";
+		else
+			q = "SELECT genre FROM stations GROUP BY genre ORDER BY genre";
+
+		Cursor cursor = database.rawQuery(q, null);
+
 		ArrayList<String> results = new ArrayList<String>();
 		if (cursor.moveToFirst()) {
 			do {
@@ -109,7 +117,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		}
 		return results;
 	}
-	
+
 	public String[][] getStationsByGenre(String genre) {
 		SQLiteDatabase database = this.getReadableDatabase();
 		Cursor cursor = database.rawQuery("SELECT server_name, listen_url, bitrate FROM stations WHERE genre='" +
@@ -245,7 +253,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		}
 		return results;
 	}
-	
+
 	public String getSetting(String name) {
 		SQLiteDatabase database = this.getReadableDatabase();
 		String query1 = "SELECT val FROM settings WHERE name='" + name + "'";

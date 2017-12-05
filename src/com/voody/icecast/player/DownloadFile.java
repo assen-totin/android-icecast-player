@@ -16,7 +16,7 @@ import android.util.Log;
 import android.content.Context;
 import android.content.Intent;
 
-public class DownloadFile extends Activity { 
+public class DownloadFile extends Activity {
     //initialize our progress dialog/bar
     private ProgressDialog mProgressDialog;
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;

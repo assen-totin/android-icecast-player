@@ -2,26 +2,37 @@ package com.voody.icecast.player;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 public class GenreListActivity extends ListActivity {
 	SQLiteHelper dbHelper;
-	
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
+	ImageView buttonHome;
+	Button buttonSearch;
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.genre_list);
+
+		buttonSearch = (Button)findViewById(R.id.search_button);
+		buttonSearch.setOnClickListener(buttonSearchClickListener);
+
+		buttonHome = (ImageView)findViewById(R.id.go_home);
+		buttonHome.setOnTouchListener(buttonHomeTouchListener);
 
 		dbHelper = new SQLiteHelper(GenreListActivity.this);
-		
-		ArrayList<String> genres = dbHelper.getGenres();
-		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-				android.R.layout.simple_list_item_1, genres);
-		setListAdapter(adapter);
+
+		updateList(null);
 	}
 	
 	public void onDestroy() {
@@ -39,4 +50,31 @@ public class GenreListActivity extends ListActivity {
 		intent.putExtras(sendBundle);
 		startActivity(intent);
 	}
-} 
+
+	private void updateList(String query) {
+		ArrayList<String> genres = dbHelper.getGenres(query);
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, genres);
+		setListAdapter(adapter);
+	}
+
+	Button.OnTouchListener buttonHomeTouchListener = new Button.OnTouchListener(){
+		public boolean onTouch(View view, MotionEvent event)  {
+			if(event.getAction() == MotionEvent.ACTION_DOWN) {
+				Intent intent = new Intent(GenreListActivity.this, MainActivityCircle.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}
+			return true;
+		}
+	};
+
+	Button.OnClickListener buttonSearchClickListener = new Button.OnClickListener(){
+		public void onClick(View view)  {
+			EditText edit_text = (EditText) findViewById(R.id.search_form);
+			String query = edit_text.getText().toString();
+			updateList(query);
+		}
+	};
+}
