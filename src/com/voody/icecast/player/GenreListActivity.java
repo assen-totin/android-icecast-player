@@ -73,7 +73,7 @@ public class GenreListActivity extends ListActivity {
 	Button.OnClickListener buttonSearchClickListener = new Button.OnClickListener(){
 		public void onClick(View view)  {
 			EditText edit_text = (EditText) findViewById(R.id.search_form);
-			String query = edit_text.getText().toString();
+			String query = edit_text.getText().toString().trim();
 			updateList(query);
 		}
 	};

@@ -136,7 +136,7 @@ public class StationListActivity extends ListActivity {
 
 			// Loop around original list of station and filter further
 			for (int i=0; i<stations.length; i++) {
-				if (stations[i][0].toLowerCase().indexOf(query.toLowerCase()) > -1)
+				if (stations[i][0].toLowerCase().indexOf(query.trim().toLowerCase()) > -1)
 					al.add(i);
 			}
 
