@@ -20,6 +20,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.PowerManager;
 import android.os.RemoteException;
+import android.util.Log;
 //import android.util.Log;
 
 
@@ -181,8 +182,7 @@ public class StationListenService extends Service {
             }
         }
     }
-    
-    
+
     // Here is how to send reply back to the registered clients. 
     private void sendMessageToUI(int intvaluetosend) {
         for (int i=mClients.size()-1; i>=0; i--) {

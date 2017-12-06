@@ -14,6 +14,7 @@ import android.os.Messenger;
 import android.os.Message;
 import android.os.RemoteException;
 //import android.util.Log;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -47,8 +48,11 @@ public class StationListenActivityImg extends Activity {
 	Handler runDelayedHandler = new Handler();
 	
 	int service_status = 0;
-	Boolean keep_playing = false;
+	int MAX_RETRIES = 5;
+	int retries = 0;
 	Boolean first_run = true;
+	Boolean keep_trying = true;
+	Boolean keep_playing = false;
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
@@ -140,11 +144,12 @@ public class StationListenActivityImg extends Activity {
         	serviceIntent = new Intent(this, StationListenService.class);
         	serviceIntent.putExtras(sendBundle);
 
-        	// Start the service (the playback will begin as soon as it is ready) and save its ComponenName 
-        	service_component_name = startService(serviceIntent);     	
+        	// Start the service (the playback will begin as soon as it is ready) and save its ComponentName
+        	service_component_name = startService(serviceIntent);
         	try {
 				serviceClass = Class.forName(service_component_name.getClassName());
-			} catch (ClassNotFoundException e) {
+			}
+			catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
         	       			
@@ -211,7 +216,6 @@ public class StationListenActivityImg extends Activity {
 		//Log.e("DEBUG", "Called onDestroy");
 		if (!keep_playing) {
 			//Log.e("DEBUG", "onDestroy !keep_playing");
-						
 			stopService(new Intent(this, serviceClass));
 		}
 		super.onDestroy();
@@ -287,6 +291,8 @@ public class StationListenActivityImg extends Activity {
 	Button.OnTouchListener buttonHomeTouchListener = new Button.OnTouchListener(){
 	   	public boolean onTouch(View view, MotionEvent event)  {
 	   		if(event.getAction() == MotionEvent.ACTION_DOWN) {
+				keep_trying = false;
+
 	   			Intent intent = new Intent(StationListenActivityImg.this, MainActivityCircle.class);
 	   			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	   			startActivity(intent);
@@ -298,6 +304,9 @@ public class StationListenActivityImg extends Activity {
 	Button.OnTouchListener buttonEditTouchListener = new Button.OnTouchListener(){
 		public boolean onTouch(View view, MotionEvent event)  {
 			if(event.getAction() == MotionEvent.ACTION_DOWN) {
+				keep_trying = false;
+				stopService(new Intent(StationListenActivityImg.this, serviceClass));
+
 				Intent intent = new Intent(StationListenActivityImg.this, ManuallyAddStation.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -397,6 +406,8 @@ public class StationListenActivityImg extends Activity {
 
     void showLoading() {
     	//Log.e("DEBUG", "Called showLoading");
+		if (! keep_trying)
+			return;
     	service_status = 0;
     	runDelayedHandler.postDelayed(runDelayed, 5000);
         Toast toast1 = Toast.makeText(this, getString(R.string.loading_station), Toast.LENGTH_SHORT);
@@ -480,8 +491,13 @@ public class StationListenActivityImg extends Activity {
             case StationListenService.MSG_SET_INT_VALUE:
                 if (msg.arg1 == -1)
                 	service.showError();
-                else if (msg.arg1 == 0)
-                	service.showLoading();
+				if (msg.arg1 == 0) {
+					service.retries++;
+					if (service.MAX_RETRIES < service.retries)
+						service.showError();
+					else
+						service.showLoading();
+				}
                 else if (msg.arg1 == 5)
                 	service.pausePlaying();               	
                 else if (msg.arg1 == 10)
