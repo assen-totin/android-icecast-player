@@ -92,59 +92,94 @@
         android:baselineAligned="false"
         android:paddingTop="@dimen/padding_large" >
     
+        <LinearLayout
+            android:id="@+id/linear_layout_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:contentDescription="@string/cd_play"
+            android:src="@drawable/b1_off" />
+
+        <ImageView
+            android:id="@+id/stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/cd_stop"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/b2_off" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_m"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:contentDescription="@string/cd_favourite_add"
+            android:src="@drawable/b3_add" />
+
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:contentDescription="@string/acc_edit"
+            android:src="@drawable/b5" />
+
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
-        android:id="@+id/linear_layout_l"
-        android:layout_width="wrap_content"
+        android:id="@+id/linear_layout_2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">    
-    
-    <ImageView
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_small"
-        android:contentDescription="@string/cd_play"
-        android:src="@drawable/b1_off" />
+        android:layout_below="@+id/linear_layout_1"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:paddingTop="@dimen/padding_large" >
 
-    <ImageView
-        android:id="@+id/stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/cd_stop"
-        android:padding="@dimen/padding_small"
-        android:src="@drawable/b2_off" />
+        <LinearLayout
+            android:id="@+id/linear_layout_l2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
 
+        <LinearLayout
+            android:id="@+id/linear_layout_m2"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_r2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/go_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_small"
+                android:contentDescription="@string/cd_go_home"
+                android:src="@drawable/b4" />
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout 
-        android:id="@+id/linear_layout_m"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content" 
-        android:layout_weight="1" />
-        
-    <LinearLayout
-        android:id="@+id/linear_layout_r"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-    
-    <ImageView
-        android:id="@+id/favourite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_small"
-        android:contentDescription="@string/cd_favourite_add"
-        android:src="@drawable/b3_add" />
-
-    <ImageView
-        android:id="@+id/go_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_small"
-        android:contentDescription="@string/cd_go_home"
-        android:src="@drawable/b4" />
-
-    </LinearLayout>
-    </LinearLayout>
-    
 </RelativeLayout>

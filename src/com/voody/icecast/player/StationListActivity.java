@@ -87,6 +87,7 @@ public class StationListActivity extends ListActivity {
 		sendBundle.putString("server_name", st[position][0]);
 		sendBundle.putString("listen_url", st[position][1]);
 		sendBundle.putString("bitrate", st[position][2]);
+		sendBundle.putString("rowid", st[position][3]);
 		
 		Intent intent = new Intent(view.getContext(), StationListenActivityImg.class);
 		intent.putExtras(sendBundle);
@@ -140,12 +141,13 @@ public class StationListActivity extends ListActivity {
 					al.add(i);
 			}
 
-			filtered = new String[al.size()][3];
+			filtered = new String[al.size()][4];
 
 			for (int i=0; i<al.size(); i++) {
 				filtered[j][0] = stations[al.get(i)][0];
 				filtered[j][1] = stations[al.get(i)][1];
 				filtered[j][2] = stations[al.get(i)][2];
+				filtered[j][3] = stations[al.get(i)][3];
 				j++;
 			}
 

@@ -120,16 +120,17 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	public String[][] getStationsByGenre(String genre) {
 		SQLiteDatabase database = this.getReadableDatabase();
-		Cursor cursor = database.rawQuery("SELECT server_name, listen_url, bitrate FROM stations WHERE genre='" +
+		Cursor cursor = database.rawQuery("SELECT server_name, listen_url, bitrate, ROWID FROM stations WHERE genre='" +
 				genre +
 				"' GROUP BY listen_url ORDER BY server_name", null);
-		String[][] results = new String[cursor.getCount()][3];
+		String[][] results = new String[cursor.getCount()][4];
 		int i = 0;
 		if (cursor.moveToFirst()) {
 			do {
 				results[i][0] = cursor.getString(0); // 0 is the first column
 				results[i][1] = cursor.getString(1); 
-				results[i][2] = cursor.getString(2); 
+				results[i][2] = cursor.getString(2);
+				results[i][3] = cursor.getString(3);
 				i++;
 			} while (cursor.moveToNext());
 		}
@@ -138,14 +139,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	public String[][] getStationsRecent() {
 		SQLiteDatabase database = this.getReadableDatabase();
-		Cursor cursor = database.rawQuery("SELECT server_name, listen_url, bitrate FROM recent GROUP BY listen_url ORDER BY unix_timestamp DESC LIMIT 20", null);
-		String[][] results = new String[cursor.getCount()][3];
+		Cursor cursor = database.rawQuery("SELECT server_name, listen_url, bitrate, ROWID FROM recent GROUP BY listen_url ORDER BY unix_timestamp DESC LIMIT 20", null);
+		String[][] results = new String[cursor.getCount()][4];
 		int i = 0;
 		if (cursor.moveToFirst()) {
 			do {
 				results[i][0] = cursor.getString(0); // 0 is the first column
 				results[i][1] = cursor.getString(1); 
-				results[i][2] = cursor.getString(2); 
+				results[i][2] = cursor.getString(2);
+				results[i][3] = cursor.getString(3);
 				i++;
 			} while (cursor.moveToNext());
 		}
@@ -208,14 +210,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	
 	public String[][] getStationsFavourites() {
 		SQLiteDatabase database = this.getReadableDatabase();
-		Cursor cursor = database.rawQuery("SELECT server_name, listen_url, bitrate FROM favourites GROUP BY listen_url ORDER BY server_name", null);
-		String[][] results = new String[cursor.getCount()][3];
+		Cursor cursor = database.rawQuery("SELECT server_name, listen_url, bitrate,ROWID FROM favourites GROUP BY listen_url ORDER BY server_name", null);
+		String[][] results = new String[cursor.getCount()][4];
 		int i = 0;
 		if (cursor.moveToFirst()) {
 			do {
 				results[i][0] = cursor.getString(0); // 0 is the first column
 				results[i][1] = cursor.getString(1); 
-				results[i][2] = cursor.getString(2); 
+				results[i][2] = cursor.getString(2);
+				results[i][3] = cursor.getString(3);
 				i++;
 			} while (cursor.moveToNext());
 		}
@@ -235,19 +238,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public String[][] getStationsSearch(String query) {
 		SQLiteDatabase database = this.getReadableDatabase();
 		
-		String query1 = "SELECT server_name, listen_url, bitrate FROM stations WHERE (genre LIKE '%" +
+		String query1 = "SELECT server_name, listen_url, bitrate, ROWID FROM stations WHERE (genre LIKE '%" +
 				query +
 				"%') OR (server_name LIKE '%" +
 				query +
 				"%')";
 		Cursor cursor = database.rawQuery(query1, null);
-		String[][] results = new String[cursor.getCount()][3];
+		String[][] results = new String[cursor.getCount()][4];
 		int i = 0;
 		if (cursor.moveToFirst()) {
 			do {
 				results[i][0] = cursor.getString(0); // 0 is the first column
 				results[i][1] = cursor.getString(1); 
-				results[i][2] = cursor.getString(2); 
+				results[i][2] = cursor.getString(2);
+				results[i][3] = cursor.getString(3);
 				i++;
 			} while (cursor.moveToNext());
 		}
@@ -268,6 +272,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public void setSetting(String name, String value) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		String query = "UPDATE settings SET val='" + value + "' WHERE name='" + name + "'";
+		database.execSQL(query);
+	}
+
+	public void editStation(String server_name, String listen_url, String id) {
+		String query = "UPDATE stations SET server_name='" + server_name + "', listen_url='" + listen_url + "' WHERE ROWID=" + id;
+		SQLiteDatabase database = this.getWritableDatabase();
+		database.execSQL(query);
+	}
+
+	public void editFavourite(String server_name, String listen_url, String id) {
+		String query = "UPDATE favourites SET server_name='" + server_name + "', listen_url='" + listen_url + "' WHERE ROWID=" + id;
+		SQLiteDatabase database = this.getWritableDatabase();
 		database.execSQL(query);
 	}
 }

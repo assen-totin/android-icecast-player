@@ -9,13 +9,16 @@
     <string name="title_activity_favourites">Icecast Player - Favourites</string>
     <string name="title_activity_recent">Icecast Player - Recent</string>
     <string name="title_activity_listen">Icecast Player - Listen</string>
-    <string name="title_manually_add">Icecast Player - Manually Add Station</string>
+    <string name="title_manually_add">Icecast Player - Add Station</string>
+    <string name="title_manually_edit">Icecast Player - Edit Station</string>
     <string name="title_activity_settings">Icecast Player - Settings</string>
     <string name="no_results">No results found :-(</string>
     <string name="no_internet">No Internet connection, shutting down.</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="reset">Reset</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
     <string name="empty"></string>
     <string name="server_name">Server Name: </string>
     <string name="listen_url">URL: </string>
@@ -24,6 +27,7 @@
     <string name="time">Time: </string>
     <string name="manually_add">Add Station</string>
     <string name="manually_added">Added the station to Favourites.</string>
+    <string name="edited_ok">Successfully edited the station.</string>
     <string name="manually_exists">Station already exists in Favourites.</string>
     <string name="url_hint">http://&#8230;</string>
     <string name="unable_to_load_station">Unable to play this station.</string>
@@ -46,6 +50,8 @@
     <string name="acc_search">Search button</string>
     <string name="acc_filter">Filter button</string>
     <string name="acc_reset">Reset button</string>
+    <string name="acc_edit">Edit button</string>
+    <string name="acc_save">Save button</string>
     <string name="acc_manually_add">Add new station</string>
     <string name="acc_settings">Change settings </string>
     <string name="cd_genres">Go to list of genres</string>

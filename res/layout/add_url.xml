@@ -59,7 +59,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
+        <ImageView
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:contentDescription="@string/cd_play"
+            android:src="@drawable/b1_on" />
     </LinearLayout>
 
     <LinearLayout 

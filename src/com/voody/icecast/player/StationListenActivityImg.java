@@ -24,7 +24,7 @@ import android.content.Context;
 
 public class StationListenActivityImg extends Activity {
 	TextView textViewServerName, textViewListenUrl, textViewBitrate, textViewTimer;
-	ImageView buttonPause, buttonPlay, buttonFavourite, buttonHome;
+	ImageView buttonPause, buttonPlay, buttonFavourite, buttonHome, buttonEdit;
 	Boolean buttonPlayState = false;
 	Boolean buttonPauseState = false;
 	
@@ -33,7 +33,7 @@ public class StationListenActivityImg extends Activity {
 	ComponentName service_component_name;
 	private SharedPreferences mPrefs;
 
-	String server_name, listen_url, bitrate;
+	String server_name, listen_url, bitrate, rowid;
 	Boolean is_favourite = false;
 	
 	SQLiteHelper dbHelper;
@@ -72,6 +72,9 @@ public class StationListenActivityImg extends Activity {
         buttonHome = (ImageView)findViewById(R.id.go_home);
         buttonHome.setOnTouchListener(buttonHomeTouchListener);
 
+		buttonEdit = (ImageView)findViewById(R.id.edit);
+		buttonEdit.setOnTouchListener(buttonEditTouchListener);
+
         textViewServerName = (TextView) findViewById(R.id.textView_server_name_2);
         textViewListenUrl = (TextView) findViewById(R.id.textView_listen_url_2);
         textViewBitrate = (TextView) findViewById(R.id.textView_bitrate_2);
@@ -99,6 +102,8 @@ public class StationListenActivityImg extends Activity {
     	
     	bitrate = recvBundle.getString("bitrate");         
         textViewBitrate.setText(bitrate + " kbps");
+
+		rowid = recvBundle.getString("rowid");
         
         if (keep_playing) {
         	//Log.e("DEBUG", "onCreate keep_playing");
@@ -221,6 +226,7 @@ public class StationListenActivityImg extends Activity {
 		savedInstanceState.putString("server_name", server_name);
 		savedInstanceState.putString("listen_url", listen_url);
 		savedInstanceState.putString("bitrate", bitrate);
+		savedInstanceState.putString("rowid", rowid);
 		savedInstanceState.putBoolean("buttonPlayState", buttonPlayState);
 		savedInstanceState.putBoolean("buttonPauseState", buttonPauseState);
 		savedInstanceState.putBoolean("keep_playing", keep_playing);
@@ -288,7 +294,26 @@ public class StationListenActivityImg extends Activity {
 	        return true;
 	   	}
 	};
-	
+
+	Button.OnTouchListener buttonEditTouchListener = new Button.OnTouchListener(){
+		public boolean onTouch(View view, MotionEvent event)  {
+			if(event.getAction() == MotionEvent.ACTION_DOWN) {
+				Intent intent = new Intent(StationListenActivityImg.this, ManuallyAddStation.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+				Bundle editBundle = new Bundle();
+				editBundle.putString("server_name", server_name);
+				editBundle.putString("listen_url", listen_url);
+				editBundle.putString("bitrate", bitrate);
+				editBundle.putString("rowid", rowid);
+				intent.putExtras(editBundle);
+
+				startActivity(intent);
+			}
+			return true;
+		}
+	};
+
 	Runnable runDelayed = new Runnable(){
         public void run() {
         	//Log.e("DEBUG", "Called runDelayed");
