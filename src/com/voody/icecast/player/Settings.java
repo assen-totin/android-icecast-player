@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 public class Settings extends Activity {
 	ImageView buttonHome;
+	Button buttonReload;
 	CheckBox cbAutoRefresh;
 	EditText textViewDays;
 	String auto_refresh, refresh_days;
@@ -33,7 +34,10 @@ public class Settings extends Activity {
         
         textViewDays = (EditText) findViewById(R.id.settings_refresh_text);
         textViewDays.addTextChangedListener(tw);
-        
+
+		buttonReload = (Button) findViewById(R.id.reload_button);
+		buttonReload.setOnTouchListener(buttonReloadTouchListener);
+
         String auto_refresh = dbHelper.getSetting("auto_refresh");
         String refresh_days = dbHelper.getSetting("refresh_days");
         
@@ -73,7 +77,6 @@ public class Settings extends Activity {
 		@Override
 		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {		
 		}
-		
 	};
 	
 	CheckBox.OnClickListener cbAutoRefreshClickListener = new CheckBox.OnClickListener(){
@@ -91,7 +94,6 @@ public class Settings extends Activity {
 				textViewDays.setFocusable(false);
 				dbHelper.setSetting("auto_refresh", "0");
 			}
-			
 		}
 	};
 	
@@ -104,5 +106,15 @@ public class Settings extends Activity {
 	   		}
 	        return true;
 	   	}
+	};
+
+	Button.OnTouchListener buttonReloadTouchListener = new Button.OnTouchListener(){
+		public boolean onTouch(View view, MotionEvent event)  {
+			if(event.getAction() == MotionEvent.ACTION_DOWN) {
+				Intent intent = new Intent(Settings.this, DownloadFile.class);
+				startActivity(intent);
+			}
+			return true;
+		}
 	};
 } 

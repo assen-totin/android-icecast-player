@@ -19,6 +19,7 @@
     <string name="reset">Reset</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+    <string name="reload">Reload stations</string>
     <string name="empty"></string>
     <string name="server_name">Server Name: </string>
     <string name="listen_url">URL: </string>
@@ -52,6 +53,7 @@
     <string name="acc_reset">Reset button</string>
     <string name="acc_edit">Edit button</string>
     <string name="acc_save">Save button</string>
+    <string name="acc_reload">Reload stations button</string>
     <string name="acc_manually_add">Add new station</string>
     <string name="acc_settings">Change settings </string>
     <string name="cd_genres">Go to list of genres</string>

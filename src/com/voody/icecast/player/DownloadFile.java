@@ -17,11 +17,11 @@ import android.content.Context;
 import android.content.Intent;
 
 public class DownloadFile extends Activity {
-    //initialize our progress dialog/bar
+    // Init progress dialog/bar
     private ProgressDialog mProgressDialog;
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
      
-    //defining file name and url
+    // Define file name and url
     public String fileName = "yp.xml";
     public String fileURL = "http://dir.xiph.org/yp.xml";
    
@@ -33,14 +33,14 @@ public class DownloadFile extends Activity {
         
         _api_level = Integer.valueOf(android.os.Build.VERSION.SDK_INT);
         
-        //setting some display
+        // Set display
         setContentView(R.layout.download_file);
          
-        //executing the asynctask
+        // Execute the asynctask
         new DownloadFileAsync().execute(fileURL);
     }
    
-    //this is our download file asynctask
+    // Download file asynctask
     class DownloadFileAsync extends AsyncTask<String, String, String> {    	   	
         @Override
         protected void onPreExecute() {
@@ -56,6 +56,7 @@ public class DownloadFile extends Activity {
             	URL url_size = new URL(fileURL);
             	HttpURLConnection con_size = (HttpURLConnection) url_size.openConnection();
             	con_size.setRequestMethod("HEAD");
+
             	// Disable compression as we want raw size
             	con_size.setRequestProperty("Accept-Encoding", "identity");
             	//con_size.setDoOutput(true);
@@ -65,17 +66,16 @@ public class DownloadFile extends Activity {
                 // Actual download
                 URL url = new URL(fileURL);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                
-                if (_api_level < 12) {
-                	// Before Android 3, force zipped download
+
+                // Before Android 3, force zipped download
+                if (_api_level < 12)
                 	con.setRequestProperty("Accept-Encoding", "gzip");
-                }
                 
                 con.setRequestMethod("GET");
                 con.setDoOutput(true);
                 con.connect();
                
-                //lenghtOfFile is used for calculating download progress
+                // lenghtOfFile is used for calculating download progress
                 int lengthOfFileDnld = 1;
                 int lengthFromHttp = con.getContentLength();                              
                 if (lengthFromHttp == -1) {
@@ -85,15 +85,14 @@ public class DownloadFile extends Activity {
                 
                 FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
 
-                // file input is from the url
+                // File input is from the url
                 InputStream is = con.getInputStream();
                 
                 // Before Android 3, force unzipping for zipped download
-                if ((_api_level < 12) & (lengthFromHttp == -1)) {
+                if ((_api_level < 12) & (lengthFromHttp == -1))
                 	is = new GZIPInputStream(is);
-                }
                 
-                //here's the download code
+                // Download code
                 byte[] buffer = new byte[10240];
                 int len1 = 0;
                 long total = 0;
@@ -132,7 +131,7 @@ public class DownloadFile extends Activity {
         }
     }
      
-    //our progress bar settings
+    // Progress bar settings
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
