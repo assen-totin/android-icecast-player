@@ -19,20 +19,30 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class ProcessFileSax extends Activity { 
-    //initialize our progress dialog/bar
+    // Init progress dialog/bar
     private ProgressDialog mProgressDialog;
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
      
-    //defining file name and url
+    // Define file name and genre separator
     public String fileName = "yp.xml";
+    public String separator = " ";
+    public int mode = 1;
    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setting some display
+
+        Bundle extra = this.getIntent().getExtras();
+        if (extra != null) {
+            fileName = extra.getString("filename");
+            separator = extra.getString("separator");
+            mode = extra.getInt("mode");
+        }
+
+        // Set display
         setContentView(R.layout.download_file);
                
-        //executing the asynctask
+        // Execute the asynctask
         new ProcessFileAsync().execute(fileName);
     }
    
@@ -48,21 +58,29 @@ public class ProcessFileSax extends Activity {
         protected String doInBackground(String... aurl) {
             // Init DB
             SQLiteHelper dbHelper = new SQLiteHelper(ProcessFileSax.this);
-            dbHelper.deleteFromStations();
-            dbHelper.insertIntoUpdates();
-            
-            //dbHelper.deleteAllFavourites();
-            //dbHelper.deleteAllRecent();            
+            if (mode == 1) {
+                dbHelper.deleteFromStations();
+                dbHelper.insertIntoUpdates();
+            }
 
             publishProgress("" + 1);
-            
+
             SaxDataHandler dataHandler = null;
             try {
             	SAXParserFactory spf = SAXParserFactory.newInstance();
             	SAXParser sp = spf.newSAXParser();
             	XMLReader xr = sp.getXMLReader();
-            	dataHandler = new SaxDataHandler();
-            	xr.setContentHandler(dataHandler);
+
+                switch(mode) {
+                    case 1:
+                        dataHandler = new SaxDataHandler1();
+                        break;
+                    case 2:
+                        dataHandler = new SaxDataHandler2();
+                        break;
+                }
+
+                xr.setContentHandler(dataHandler);
             	FileInputStream fis = openFileInput(fileName);
             	xr.parse(new InputSource(fis));
             }
@@ -85,16 +103,15 @@ public class ProcessFileSax extends Activity {
 
             	listen_url = listen_url.replace("\'","&apos");
             	server_name = server_name.replace("\'","&apos");
-          	
-            	String[] genre_single = genre.split(" ");
-            	for (int j=0; j<genre_single.length; j++) {       		
+
+            	String[] genre_single = genre.split(separator);
+            	for (int j=0; j<genre_single.length; j++) {
 					genre_single[j] = genre_single[j].replace("\'","");
             		dbHelper.insertIntoStations(server_name, listen_url, bitrate, genre_single[j]);
             	}
-            	
-            	if (i%100 == 0) {
+
+            	if (i % 100 == 0)
             		publishProgress("" + (10 + 90*i/dataHandler.getData().getServerName().size()));
-            	}
             }
 
             publishProgress("" + 100);
@@ -135,4 +152,3 @@ public class ProcessFileSax extends Activity {
         }
     }
 }
-

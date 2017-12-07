@@ -21,16 +21,26 @@ public class DownloadFile extends Activity {
     private ProgressDialog mProgressDialog;
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
      
-    // Define file name and url
-    public String fileName = "yp.xml";
-    public String fileURL = "http://dir.xiph.org/yp.xml";
+    // Define file name, URL and genre list separator
+    public String fileName = null;
+    public String fileURL = null;
+    public String separator = " ";
+    public int mode = 0;
    
     private int _api_level = 0;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        Bundle extra = this.getIntent().getExtras();
+        if (extra != null) {
+            fileURL = extra.getString("url");
+            fileName = extra.getString("filename");
+            separator = extra.getString("separator");
+            mode = extra.getInt("mode");
+        }
+
         _api_level = Integer.valueOf(android.os.Build.VERSION.SDK_INT);
         
         // Set display
@@ -123,8 +133,14 @@ public class DownloadFile extends Activity {
         protected void onPostExecute(String unused) {
             //dismiss the dialog after the file was downloaded
         	dismissDialog(DIALOG_DOWNLOAD_PROGRESS);
-	     
+
+            Bundle params = new Bundle();
+            params.putString("separator", separator);
+            params.putString("filename", fileName);
+            params.putInt("mode", mode);
+
 	        Intent intent = new Intent(DownloadFile.this, ProcessFileSax.class);
+            intent.putExtras(params);
 	        startActivity(intent);
         	
             finish();
