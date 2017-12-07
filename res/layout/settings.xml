@@ -57,17 +57,6 @@
         android:text="@string/settings_refresh_time2" 
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/reload_button"
-        android:layout_below="@+id/settings_refresh_2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding_large"
-        android:layout_marginRight="@dimen/padding_large"
-        android:contentDescription="@string/acc_reload"
-        android:text="@string/reload"
-        android:textColor="#000000" />
-
     <LinearLayout
         android:id="@+id/linear_layout_1"
         android:layout_width="fill_parent"
@@ -81,7 +70,15 @@
             android:id="@+id/linear_layout_l"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" />
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/reload_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_large"
+                android:contentDescription="@string/acc_reload"
+                android:src="@drawable/b10" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linear_layout_m"
@@ -98,7 +95,7 @@
                 android:id="@+id/go_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_small"
+                android:padding="@dimen/padding_large"
                 android:contentDescription="@string/cd_go_home"
                 android:src="@drawable/b4" />
         </LinearLayout>

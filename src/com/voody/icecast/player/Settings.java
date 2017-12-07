@@ -13,8 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 public class Settings extends Activity {
-	ImageView buttonHome;
-	Button buttonReload;
+	ImageView buttonHome, buttonReload;
 	CheckBox cbAutoRefresh;
 	EditText textViewDays;
 	String auto_refresh, refresh_days;
@@ -35,7 +34,7 @@ public class Settings extends Activity {
         textViewDays = (EditText) findViewById(R.id.settings_refresh_text);
         textViewDays.addTextChangedListener(tw);
 
-		buttonReload = (Button) findViewById(R.id.reload_button);
+		buttonReload = (ImageView) findViewById(R.id.reload_button);
 		buttonReload.setOnTouchListener(buttonReloadTouchListener);
 
         String auto_refresh = dbHelper.getSetting("auto_refresh");

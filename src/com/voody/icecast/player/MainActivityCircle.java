@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivityCircle extends Activity {
-    Button buttonSearch, buttonAdd, buttonSettings, buttonGenres, buttonFavourites, buttonRecent;
+    Button buttonGenres, buttonFavourites, buttonRecent;
     Bundle sendBundle = new Bundle();
-    ImageView menuCircle;
+    ImageView menuCircle, buttonSettings, buttonSearch, buttonAdd;
     int menu_circle_size, menu_circle_number = 0, displaySmaller;
     int[] widget_coord = new int[2];
     Intent intent;
@@ -47,13 +47,13 @@ public class MainActivityCircle extends Activity {
             menuCircle.setOnTouchListener(menuCircleTouchListener);
         }
 
-        buttonSearch = (Button)findViewById(R.id.search_button);
+        buttonSearch = (ImageView) findViewById(R.id.search_button);
         buttonSearch.setOnClickListener(buttonSearchClickListener); 
 
-        buttonAdd = (Button)findViewById(R.id.manually_add);
+        buttonAdd = (ImageView)findViewById(R.id.manually_add);
         buttonAdd.setOnClickListener(buttonManuallyClickListener);
         
-        buttonSettings = (Button)findViewById(R.id.settings);
+        buttonSettings = (ImageView)findViewById(R.id.settings);
         buttonSettings.setOnClickListener(buttonSettingsClickListener);
 
         if (!isOnline()) {

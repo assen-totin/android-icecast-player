@@ -20,15 +20,13 @@
             android:hint="@string/search_hint" >
         </EditText>
 
-        <Button
+        <ImageView
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_large"
             android:contentDescription="@string/acc_search"
-            android:text="@string/search"
-            android:textColor="#000000" />
-
+            android:src="@drawable/b7" />
     </LinearLayout>
      
     <ImageView
@@ -49,26 +47,21 @@
         android:layout_marginTop="@dimen/padding_large"
         android:orientation="horizontal" >
     
-    <Button
+    <ImageView
         android:id="@+id/manually_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
         android:contentDescription="@string/acc_manually_add"
-        android:ems="8"
-        android:text="@string/manually_add"
-        android:textColor="#000000" />
+        android:src="@drawable/b8" />
 
-    <Button
+    <ImageView
         android:id="@+id/settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_large"
         android:contentDescription="@string/acc_settings"
-        android:ems="8"
-        android:text="@string/settings"
-        android:textColor="#000000" />
-    
+        android:src="@drawable/b9" />
     </LinearLayout>
     
 </RelativeLayout>
