@@ -72,44 +72,13 @@ public class SaxDataHandler2 extends SaxDataHandler {
 						break;
 				}
 			}
-			//_inSection = true;
- 			//_data.sectionId = atts.getValue("id");
 		}
-		/*
-		else {
-			//_elementOn = true;
-			sb = new StringBuilder();
-		}
-		*/
 	} 
  
     // Called at the end of the element. 
 	// Setting the booleans to false, so we know that we've just left that tag. 
 	@Override 
 	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
-		/*
-		if(localName.equals("result")) {
-			// Do nothing; this is the closing tag for whole file 
-		}
-		else if(localName.equals("station")) {
-        	_inSection = false; 
-        }
-		else {
-			if(localName.equals("server_name")) {
-				_data.setServerName(_elementValue);
-			}
-			if(localName.equals("listen_url")) {
-				_data.setListenUrl(_elementValue);
-			}
-			if(localName.equals("bitrate")) {
-				_data.setBitrate(_elementValue);
-			}
-			if(localName.equals("genre")) {
-				_data.setGenre(_elementValue);
-			}
-			_elementOn = false;
-		}
-		*/
 	} 
 
 	// Calling when we're within an element. 
@@ -119,14 +88,5 @@ public class SaxDataHandler2 extends SaxDataHandler {
 	public void characters(char ch[], int start, int length) { 
 		//String chars = new String(ch, start, length); 
 		//chars = chars.trim();
-/*
-		if (_inSection && _elementOn) {
-			for (int i=start; i<start+length; i++) {
-				sb.append(ch[i]);
-				//_elementValue = chars;
-			}
-			_elementValue = sb.toString().trim();
-		}
-		*/
 	}
 }
