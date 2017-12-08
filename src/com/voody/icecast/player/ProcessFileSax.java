@@ -26,6 +26,7 @@ public class ProcessFileSax extends Activity {
     // Define file name and genre separator
     public String fileName = "yp.xml";
     public String separator = " ";
+    public String downloadName = "";
     public int mode = 1;
    
     @Override
@@ -36,6 +37,7 @@ public class ProcessFileSax extends Activity {
         if (extra != null) {
             fileName = extra.getString("filename");
             separator = extra.getString("separator");
+            downloadName = extra.getString("name");
             mode = extra.getInt("mode");
         }
 
@@ -140,7 +142,7 @@ public class ProcessFileSax extends Activity {
         switch (id) {
             case DIALOG_DOWNLOAD_PROGRESS: //we set this to 0
                 mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setMessage("Processing file...");
+                mProgressDialog.setMessage(getResources().getText(R.string.processing) + " " + downloadName + "...");
                 mProgressDialog.setIndeterminate(false);
                 mProgressDialog.setMax(100);
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

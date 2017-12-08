@@ -111,25 +111,18 @@ public class Settings extends Activity {
 		public boolean onTouch(View view, MotionEvent event)  {
 			if(event.getAction() == MotionEvent.ACTION_DOWN) {
 				Bundle dnld1 = new Bundle();
-				dnld1.putString("url", "http://dir.xiph.org/yp.xml");
-				dnld1.putString("filename", "yp.xml");
-				dnld1.putString("separator", " ");
 				dnld1.putInt("mode", 1);
 
 				Intent intent1 = new Intent(Settings.this, DownloadFile.class);
 				intent1.putExtras(dnld1);
 				startActivity(intent1);
-/*
+
 				Bundle dnld2 = new Bundle();
-				dnld2.putString("url", "http://www.radio-browser.info/webservice/xml/stations");
-				dnld2.putString("filename", "stations");
-				dnld2.putString("separator", ",");
-				dnld1.putInt("mode", 2);
+				dnld2.putInt("mode", 2);
 
 				Intent intent2 = new Intent(Settings.this, DownloadFile.class);
 				intent2.putExtras(dnld2);
 				startActivity(intent2);
-				*/
 			}
 			return true;
 		}

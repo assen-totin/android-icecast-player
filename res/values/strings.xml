@@ -38,6 +38,8 @@
     <string name="settings_refresh_time1">Refresh each</string>
     <string name="settings_refresh_time2">days</string>
     <string name="number_7">7</string>
+    <string name="download">Downloading</string>
+    <string name="processing">Processing</string>
     
     <!-- Accessibility strings -->
     <string name="search_hint">Enter keyword</string>

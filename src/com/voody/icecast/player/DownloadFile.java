@@ -25,7 +25,8 @@ public class DownloadFile extends Activity {
     public String fileName = null;
     public String fileURL = null;
     public String separator = " ";
-    public int mode = 0;
+    public String downloadName = "";
+    public int mode = 1;
    
     private int _api_level = 0;
     
@@ -34,11 +35,24 @@ public class DownloadFile extends Activity {
         super.onCreate(savedInstanceState);
 
         Bundle extra = this.getIntent().getExtras();
-        if (extra != null) {
-            fileURL = extra.getString("url");
-            fileName = extra.getString("filename");
-            separator = extra.getString("separator");
+        if (extra != null)
             mode = extra.getInt("mode");
+
+        switch (mode) {
+            case 1:
+                downloadName = "Icecast";
+                fileURL = "http://dir.xiph.org/yp.xml";
+                fileName = "yp.xml";
+                separator = " ";
+                break;
+            case 2:
+                downloadName = "Radio Browser";
+                fileURL = "http://www.radio-browser.info/webservice/xml/stations";
+                fileName = "stations";
+                separator = ",";
+                break;
+            default:
+                Log.e("ERROR", "Unknown download mode: " + mode);
         }
 
         _api_level = Integer.valueOf(android.os.Build.VERSION.SDK_INT);
@@ -137,6 +151,7 @@ public class DownloadFile extends Activity {
             Bundle params = new Bundle();
             params.putString("separator", separator);
             params.putString("filename", fileName);
+            params.putString("name", downloadName);
             params.putInt("mode", mode);
 
 	        Intent intent = new Intent(DownloadFile.this, ProcessFileSax.class);
@@ -153,7 +168,7 @@ public class DownloadFile extends Activity {
         switch (id) {
             case DIALOG_DOWNLOAD_PROGRESS: //we set this to 0
                 mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setMessage("Downloading file...");
+                mProgressDialog.setMessage(getResources().getText(R.string.download) + " " + downloadName + "...");
                 mProgressDialog.setIndeterminate(false);
                 mProgressDialog.setMax(100);
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
