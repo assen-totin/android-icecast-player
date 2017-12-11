@@ -53,6 +53,7 @@ public class StationListenActivityImg extends Activity {
 	Boolean first_run = true;
 	Boolean keep_trying = true;
 	Boolean keep_playing = false;
+	Boolean can_edit = false;
     
 	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 	Messenger mService = null;
@@ -78,6 +79,7 @@ public class StationListenActivityImg extends Activity {
 
 		buttonEdit = (ImageView)findViewById(R.id.edit);
 		buttonEdit.setOnTouchListener(buttonEditTouchListener);
+		buttonEdit.setEnabled(false);
 
         textViewServerName = (TextView) findViewById(R.id.textView_server_name_2);
         textViewListenUrl = (TextView) findViewById(R.id.textView_listen_url_2);
@@ -108,6 +110,8 @@ public class StationListenActivityImg extends Activity {
         textViewBitrate.setText(bitrate + " kbps");
 
 		rowid = recvBundle.getString("rowid");
+
+		can_edit = recvBundle.getBoolean("can_edit");
         
         if (keep_playing) {
         	//Log.e("DEBUG", "onCreate keep_playing");
@@ -121,6 +125,11 @@ public class StationListenActivityImg extends Activity {
         	
         	first_run = false;
         }
+
+        if (can_edit) {
+			buttonEdit.setEnabled(true);
+			buttonEdit.setImageResource(R.drawable.b5_on);
+		}
 	}
 	
 	@Override

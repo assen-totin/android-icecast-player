@@ -16,15 +16,14 @@ import android.widget.ListView;
 
 public class GenreListActivity extends ListActivity {
 	SQLiteHelper dbHelper;
-	ImageView buttonHome;
-	Button buttonSearch;
+	ImageView buttonHome, buttonSearch;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.genre_list);
 
-		buttonSearch = (Button)findViewById(R.id.search_button);
+		buttonSearch = (ImageView)findViewById(R.id.search_button);
 		buttonSearch.setOnClickListener(buttonSearchClickListener);
 
 		buttonHome = (ImageView)findViewById(R.id.go_home);

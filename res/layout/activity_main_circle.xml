@@ -24,7 +24,7 @@
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_large"
+            android:layout_marginLeft="@dimen/padding_medium"
             android:contentDescription="@string/acc_search"
             android:src="@drawable/b7" />
     </LinearLayout>

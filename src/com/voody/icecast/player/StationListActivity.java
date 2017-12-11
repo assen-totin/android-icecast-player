@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,11 +19,11 @@ import static android.R.attr.id;
 
 public class StationListActivity extends ListActivity {
 	SQLiteHelper dbHelper;
-	ImageView buttonHome;
-	Button buttonFilter, buttonReset;
+	ImageView buttonHome, buttonFilter, buttonReset;
 	String mode, genre, query;
 	String[][] stations, filtered;
 	Boolean filterOn = false;
+	Boolean canEditStation = false;
 
 	public void onCreate(Bundle savedInstanceState) {
 		Bundle recvBundle;
@@ -31,10 +32,10 @@ public class StationListActivity extends ListActivity {
 
 		setContentView(R.layout.station_list);
 
-		buttonFilter = (Button)findViewById(R.id.filter_button);
+		buttonFilter = (ImageView)findViewById(R.id.filter_button);
 		buttonFilter.setOnClickListener(buttonFilterClickListener);
 
-		buttonReset = (Button)findViewById(R.id.reset_button);
+		buttonReset = (ImageView)findViewById(R.id.reset_button);
 		buttonReset.setOnClickListener(buttonResetClickListener);
 
 		buttonHome = (ImageView)findViewById(R.id.go_home);
@@ -51,10 +52,12 @@ public class StationListActivity extends ListActivity {
 		if(mode.compareTo("genre") == 0) {
 			genre = recvBundle.getString("genre");
 			stations = dbHelper.getStationsByGenre(genre);
+			canEditStation = true;
 		}
 		else if (mode.compareTo("search") == 0) {
 			query = recvBundle.getString("query");
 			stations = dbHelper.getStationsSearch(query);
+			canEditStation = true;
 		}
 		else if(mode.compareTo("recent") == 0) {
 			setTitle(getResources().getText(R.string.title_activity_recent));
@@ -63,6 +66,7 @@ public class StationListActivity extends ListActivity {
 		else if(mode.compareTo("favourites") == 0) {
 			setTitle(getResources().getText(R.string.title_activity_favourites));
 			stations = dbHelper.getStationsFavourites();
+			canEditStation = true;
 		}
 
 		updateList(stations);
@@ -88,7 +92,8 @@ public class StationListActivity extends ListActivity {
 		sendBundle.putString("listen_url", st[position][1]);
 		sendBundle.putString("bitrate", st[position][2]);
 		sendBundle.putString("rowid", st[position][3]);
-		
+		sendBundle.putBoolean("can_edit", canEditStation);
+
 		Intent intent = new Intent(view.getContext(), StationListenActivityImg.class);
 		intent.putExtras(sendBundle);
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

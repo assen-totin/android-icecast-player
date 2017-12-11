@@ -142,7 +142,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_small"
             android:contentDescription="@string/acc_edit"
-            android:src="@drawable/b5" />
+            android:src="@drawable/b5_off" />
 
         </LinearLayout>
     </LinearLayout>

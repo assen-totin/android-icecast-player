@@ -42,8 +42,8 @@
     <string name="processing">Processing</string>
     
     <!-- Accessibility strings -->
-    <string name="search_hint">Enter keyword</string>
-    <string name="filter_hint">Filter keyword</string>
+    <string name="search_hint">Search</string>
+    <string name="filter_hint">Filter</string>
     <string name="cd_menu">Main menu image</string>
     <string name="cd_play">Play</string>
     <string name="cd_stop">Pause</string>

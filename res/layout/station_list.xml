@@ -21,23 +21,21 @@
             android:hint="@string/filter_hint" >
         </EditText>
 
-        <Button
+        <ImageView
             android:id="@+id/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_medium"
             android:contentDescription="@string/acc_filter"
-            android:text="@string/filter"
-            android:textColor="#000000" />
+            android:src="@drawable/b7" />
 
-        <Button
+        <ImageView
             android:id="@+id/reset_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_medium"
             android:contentDescription="@string/acc_reset"
-            android:text="@string/reset"
-            android:textColor="#000000" />
+            android:src="@drawable/b11" />
     </LinearLayout>
 
     <ListView android:id="@android:id/list"
