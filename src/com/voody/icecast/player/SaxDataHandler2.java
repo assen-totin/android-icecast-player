@@ -72,6 +72,8 @@ public class SaxDataHandler2 extends SaxDataHandler {
 						break;
 				}
 			}
+
+			_data.setCount();
 		}
 	} 
  

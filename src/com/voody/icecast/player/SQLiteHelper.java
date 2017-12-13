@@ -56,6 +56,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		String query = "DELETE FROM stations";
 		SQLiteDatabase database = this.getWritableDatabase();
 		database.execSQL(query);
+
+		query = "VACUUM";
+		database.execSQL(query);
 	}
 	
 	public int countStations() {

@@ -28,18 +28,23 @@ public class ProcessFileSax extends Activity {
     public String separator = " ";
     public String downloadName = "";
     public int mode = 1;
-   
+
+    private SQLiteHelper dbHelper = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle extra = this.getIntent().getExtras();
         if (extra != null) {
-            fileName = extra.getString("filename");
+            fileName = extra.getString("file_name");
             separator = extra.getString("separator");
-            downloadName = extra.getString("name");
+            downloadName = extra.getString("download_name");
             mode = extra.getInt("mode");
         }
+
+        // Init DB
+        dbHelper = new SQLiteHelper(ProcessFileSax.this);
 
         // Set display
         setContentView(R.layout.download_file);
@@ -58,13 +63,6 @@ public class ProcessFileSax extends Activity {
        
         @Override
         protected String doInBackground(String... aurl) {
-            // Init DB
-            SQLiteHelper dbHelper = new SQLiteHelper(ProcessFileSax.this);
-            if (mode == 1) {
-                dbHelper.deleteFromStations();
-                dbHelper.insertIntoUpdates();
-            }
-
             publishProgress("" + 1);
 
             SaxDataHandler dataHandler = null;
@@ -89,7 +87,7 @@ public class ProcessFileSax extends Activity {
             catch(ParserConfigurationException pce) { 
             	Log.e("SAX XML", "sax parse error", pce); 
             } catch(SAXException se) { 
-            	Log.e("SAX XML", "sax error", se); 
+            	Log.e("SAX XML", "sax error", se);
             } catch(IOException ioe) { 
             	Log.e("SAX XML", "sax parse io error", ioe); 
             } 
@@ -97,23 +95,24 @@ public class ProcessFileSax extends Activity {
 			publishProgress("" + 10);
 			
             // Process the SAX into SQL table
-            for (int i = 0; i < dataHandler.getData().getServerName().size(); i++) {
-            	String server_name = dataHandler.getData().getServerName().get(i);
-            	String listen_url = dataHandler.getData().getListenUrl().get(i);
-            	String bitrate = dataHandler.getData().getBitrate().get(i);
-            	String genre = dataHandler.getData().getGenre().get(i);
+            //Log.e("TOTAL RECORDS", "" + dataHandler.getData().getCount());
+            for (int i = 0; i < dataHandler.getData().getCount(); i++) {
+                String server_name = dataHandler.getData().getServerName().get(i);
+                String listen_url = dataHandler.getData().getListenUrl().get(i);
+                String bitrate = dataHandler.getData().getBitrate().get(i);
+                String genre = dataHandler.getData().getGenre().get(i);
 
-            	listen_url = listen_url.replace("\'","&apos");
-            	server_name = server_name.replace("\'","&apos");
+                listen_url = listen_url.replace("\'","&apos");
+                server_name = server_name.replace("\'","&apos");
 
-            	String[] genre_single = genre.split(separator);
-            	for (int j=0; j<genre_single.length; j++) {
-					genre_single[j] = genre_single[j].replace("\'","");
-            		dbHelper.insertIntoStations(server_name, listen_url, bitrate, genre_single[j]);
-            	}
+                String[] genre_single = genre.split(separator);
+                for (int j=0; j<genre_single.length; j++) {
+                    genre_single[j] = genre_single[j].replace("\'","");
+                    dbHelper.insertIntoStations(server_name, listen_url, bitrate, genre_single[j]);
+                }
 
-            	if (i % 100 == 0)
-            		publishProgress("" + (10 + 90*i/dataHandler.getData().getServerName().size()));
+                if (i % 100 == 0)
+                    publishProgress("" + (10 + 90*i/dataHandler.getData().getServerName().size()));
             }
 
             publishProgress("" + 100);

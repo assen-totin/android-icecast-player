@@ -70,19 +70,8 @@ public class MainActivityCircle extends Activity {
         	String refresh_days = dbHelper.getSetting("refresh_days");
         	long threshold = Integer.parseInt(refresh_days) * 86400;
         	if ((unix_timestamp - last_update) > threshold) {
-				Bundle dnld1 = new Bundle();
-				dnld1.putInt("mode", 1);
-
-				Intent intent1 = new Intent(MainActivityCircle.this, DownloadFile.class);
-				intent1.putExtras(dnld1);
+				Intent intent1 = new Intent(MainActivityCircle.this, FetchStations.class);
 				startActivity(intent1);
-
-				Bundle dnld2 = new Bundle();
-				dnld2.putInt("mode", 2);
-
-				Intent intent2 = new Intent(MainActivityCircle.this, DownloadFile.class);
-				intent2.putExtras(dnld2);
-				startActivity(intent2);
         	}
         }
         dbHelper.close();

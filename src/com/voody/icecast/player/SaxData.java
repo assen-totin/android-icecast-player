@@ -13,6 +13,8 @@ public class SaxData {
   private ArrayList<String> bitrate = new ArrayList<String>();
   private ArrayList<String> genre = new ArrayList<String>();
 
+    private int count = 0;
+
   public SaxData() { 
 	  
   }
@@ -44,4 +46,12 @@ public class SaxData {
   public void setGenre(String genre) {
       this.genre.add(genre);
   }
+
+  public void setCount() {
+      count ++;
+  }
+
+    public int getCount() {
+        return count;
+    }
 }

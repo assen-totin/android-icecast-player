@@ -1,5 +1,7 @@
 package com.voody.icecast.player;
 
+import android.util.Log;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -16,7 +18,7 @@ public class SaxDataHandler1 extends SaxDataHandler {
  
 	// String Builder
 	StringBuilder sb;
-	
+
 	// Returns the data object
 	@Override
 	public SaxData getData(){
@@ -66,8 +68,10 @@ public class SaxDataHandler1 extends SaxDataHandler {
 		if(localName.equals("directory")) { 
 			// Do nothing; this is the closing tag for whole file 
 		}
-		else if(localName.equals("section")) { 
-        	_inSection = false; 
+		else if(localName.equals("entry")) {
+        	_inSection = false;
+			_data.setCount();
+			//Log.e("DEBUG", "INCREMENT");
         }
 		else {
 			if(localName.equals("server_name")) {
@@ -101,5 +105,5 @@ public class SaxDataHandler1 extends SaxDataHandler {
 			}
 			_elementValue = sb.toString().trim();
 		}
-	} 
+	}
 }

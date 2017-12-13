@@ -110,19 +110,8 @@ public class Settings extends Activity {
 	Button.OnTouchListener buttonReloadTouchListener = new Button.OnTouchListener(){
 		public boolean onTouch(View view, MotionEvent event)  {
 			if(event.getAction() == MotionEvent.ACTION_DOWN) {
-				Bundle dnld1 = new Bundle();
-				dnld1.putInt("mode", 1);
-
-				Intent intent1 = new Intent(Settings.this, DownloadFile.class);
-				intent1.putExtras(dnld1);
+				Intent intent1 = new Intent(Settings.this, FetchStations.class);
 				startActivity(intent1);
-
-				Bundle dnld2 = new Bundle();
-				dnld2.putInt("mode", 2);
-
-				Intent intent2 = new Intent(Settings.this, DownloadFile.class);
-				intent2.putExtras(dnld2);
-				startActivity(intent2);
 			}
 			return true;
 		}

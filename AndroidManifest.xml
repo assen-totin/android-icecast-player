@@ -61,7 +61,12 @@
             android:name="com.voody.icecast.player.Settings"
             android:theme="@style/AppTheme"
             android:label="@string/title_activity_settings">
-        </activity>        
+        </activity>
+        <activity
+            android:name="com.voody.icecast.player.FetchStations"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_activity_download">
+        </activity>
         <service android:enabled="true" android:name="com.voody.icecast.player.StationListenService" />
         
     </application>
